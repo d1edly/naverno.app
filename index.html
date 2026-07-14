@@ -376,16 +376,16 @@
             justify-content: center;
         }
 
-        .lock-icon {
-            font-size: 4rem;
+        .lock-icon-svg {
+            color: #ffffff;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
+            animation: pulse-lock 2.5s infinite ease-in-out;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
-            animation: pulse-lock 2s infinite ease-in-out;
         }
 
         @keyframes pulse-lock {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.1); opacity: 1; }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)); }
         }
 
         .locked-title {
@@ -433,7 +433,6 @@
             { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "slider", min: 1, max: 10, default: 10 },
             { id: "q2", text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
             { id: "q3", text: "Ого, а почему вообще захотел стать частью нашей студии?", type: "textarea", placeholder: "Твой ответ..." },
-            // Минимальный год изменен на 2016
             { id: "q4", text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", type: "slider", min: 2016, max: 2026, default: 2020 },
             { id: "q5", text: "А какой лвл у тебя?", type: "slider", min: 1, max: 100, default: 10 },
             { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "words" },
@@ -466,21 +465,25 @@
             }).join(' ');
         }
 
-        // Экран красивой заглушки "Доступ закрыт"
-function renderLockedScreen() {
+        // Экран красивой заглушки "Доступ закрыт" со стильным SVG-замком
+        function renderLockedScreen() {
             container.innerHTML = `
                 <div class="locked-container fade-in">
-                    <div class="lock-icon" style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
-                    <div class="locked-title" style="color: #ffffff; font-family: 'MarkerFat', sans-serif; font-size: 1.5rem; margin-bottom: 10px;">АНКЕТА ОТПРАВЛЕНА</div>
-                    <div class="locked-subtitle" style="color: #cccccc; font-size: 1rem; line-height: 1.4; padding: 0 10px;">
+                    <!-- Красивая векторная иконка замка с неоновым свечением -->
+                    <svg class="lock-icon-svg" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <div class="locked-title" style="color: #ffffff; font-family: 'MarkerFat', sans-serif; font-size: 1.5rem; margin-bottom: 12px; letter-spacing: 1px;">АНКЕТА ОТПРАВЛЕНА</div>
+                    <div class="locked-subtitle" style="color: #cccccc; font-size: 1rem; line-height: 1.5; padding: 0 10px;">
                         Твои ответы уже улетели к нам. <br>
-                        Мы изучим их и свяжемся в ЛС, если ты нам подойдёшь. 
+                        Мы изучим их и свяжемся в ЛС, если ты нам подойдешь.
                         <br><br>
                         Повторно заполнить форму нельзя.
                     </div>
                 </div>
             `;
-            // Убеждаемся, что контейнер выглядит как плашка
+            // Принудительно возвращаем стеклянные стили контейнеру, чтобы текст не сливался с фоном
             container.style.background = "rgba(20, 20, 20, 0.4)";
             container.style.border = "1px solid rgba(255, 255, 255, 0.08)";
             container.style.backdropFilter = "blur(20px)";
@@ -528,7 +531,6 @@ function renderLockedScreen() {
                         isNextDisabled = false; 
                     } else if (q.type === 'words') {
                         const words = savedVal ? savedVal.split(", ") : ["", "", ""];
-                        // Переделано в вертикальную колонку .words-column для широких полей ввода
                         inputHtml = `
                             <div class="words-column">
                                 <input type="text" id="w1" class="word-input" placeholder="Слово №1 (например: Добрый)" value="${words[0] || ''}">
@@ -633,7 +635,7 @@ function renderLockedScreen() {
                     localStorage.setItem('naverno_anketa_submitted', 'true');
                     console.log("Данные анкеты:", userAnswers);
 
-                    // Спустя ровно 5 секунд переключаем на красивую заглушку
+                    // Спустя ровно 5 секунд переключаем на красивую заглушку с кастомным замком
                     setTimeout(() => {
                         container.classList.remove('fade-in');
                         container.classList.add('fade-out');
