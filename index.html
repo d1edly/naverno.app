@@ -467,17 +467,23 @@
         }
 
         // Экран красивой заглушки "Доступ закрыт"
-        function renderLockedScreen() {
+function renderLockedScreen() {
             container.innerHTML = `
                 <div class="locked-container fade-in">
-                    <div class="lock-icon">🔒</div>
-                    <div class="locked-title">АНКЕТА ОТПРАВЛЕНА</div>
-                    <div class="locked-subtitle">
+                    <div class="lock-icon" style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
+                    <div class="locked-title" style="color: #ffffff; font-family: 'MarkerFat', sans-serif; font-size: 1.5rem; margin-bottom: 10px;">АНКЕТА ОТПРАВЛЕНА</div>
+                    <div class="locked-subtitle" style="color: #cccccc; font-size: 1rem; line-height: 1.4; padding: 0 10px;">
                         Твои ответы уже улетели к нам. <br>
-                        Мы изучим их и свяжемся в ЛС, если ты нам подойдёшь. Повторно заполнить форму нельзя.
+                        Мы изучим их и свяжемся в ЛС, если ты нам подойдёшь. 
+                        <br><br>
+                        Повторно заполнить форму нельзя.
                     </div>
                 </div>
             `;
+            // Убеждаемся, что контейнер выглядит как плашка
+            container.style.background = "rgba(20, 20, 20, 0.4)";
+            container.style.border = "1px solid rgba(255, 255, 255, 0.08)";
+            container.style.backdropFilter = "blur(20px)";
         }
 
         function renderStep() {
