@@ -25,7 +25,7 @@
             background-color: #050505;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
-            overflow: hidden; /* Скрываем скролл от фона */
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -39,6 +39,7 @@
             z-index: 0;
             opacity: 0.6;
             animation: float 15s infinite ease-in-out alternate;
+            pointer-events: none; /* Чтобы фон не мешал кликам */
         }
         .blob-1 {
             width: 300px;
@@ -90,6 +91,7 @@
             justify-content: center;
             z-index: 2;
             transition: all 0.4s ease;
+            box-sizing: border-box;
         }
 
         .container:hover {
@@ -309,10 +311,10 @@
 
         const container = document.getElementById('main-container');
 
-        // Функция разбивает текст на слова для плавной анимации
+        // Генерирует текст, который красиво появляется по словам
         function generateAnimatedText(text) {
             return text.split(' ').map((word, index) => {
-                let delay = index * 0.05; // Задержка для каждого слова
+                let delay = index * 0.04;
                 return `<span class="word-reveal" style="animation-delay: ${delay}s">${word}</span>`;
             }).join(' ');
         }
@@ -325,43 +327,39 @@
                 let html = '';
 
                 if (currentStep === -1) {
-                    // Стартовый экран
                     const rawText = "Здарова! Мы тут решили набрать какое-то количество людей в актёрский состав, чтобы у нас было больше свободы фантазии, если ты хочешь двигаться с нами, то нам нужно о тебе немного узнать, для этого тебе нужно заполнить анкету.";
-                    const animatedHtml = generateAnimatedText(rawText);
-
                     html = `
                         <div class="text-content" style="min-height: 120px;">
-                            ${animatedHtml}
+                            ${generateAnimatedText(rawText)}
                         </div>
                         <button class="btn" style="width: 100%;" id="startBtn">Заполнить анкету</button>
                     `;
                 } else if (currentStep < questions.length) {
-                    // Вопросы
                     const q = questions[currentStep];
                     let inputHtml = '';
                     let isNextDisabled = true;
                     const savedVal = userAnswers[q.id] || "";
 
                     if (q.type === 'text') {
-                        inputHtml = `<input type="text" id="answerInput" placeholder="${q.placeholder}" value="${savedVal}">`;
+                        inputHtml = `<input type="text" id="answerInput" class="custom-input" placeholder="${q.placeholder}" value="${savedVal}">`;
                         isNextDisabled = !savedVal;
                     } else if (q.type === 'textarea') {
-                        inputHtml = `<textarea id="answerInput" rows="4" placeholder="${q.placeholder}">${savedVal}</textarea>`;
+                        inputHtml = `<textarea id="answerInput" class="custom-input" rows="4" placeholder="${q.placeholder}">${savedVal}</textarea>`;
                         isNextDisabled = !savedVal;
                     } else if (q.type === 'slider') {
                         const currentVal = savedVal || q.default;
                         inputHtml = `
                             <div class="slider-value" id="sliderVal">${currentVal}</div>
-                            <input type="range" id="answerInput" min="${q.min}" max="${q.max}" value="${currentVal}">
+                            <input type="range" id="answerInput" class="custom-slider" min="${q.min}" max="${q.max}" value="${currentVal}">
                         `;
                         isNextDisabled = false; 
                     } else if (q.type === 'words') {
                         const words = savedVal ? savedVal.split(", ") : ["", "", ""];
                         inputHtml = `
                             <div class="words-grid">
-                                <input type="text" id="w1" placeholder="Слово 1" value="${words[0] || ''}">
-                                <input type="text" id="w2" placeholder="Слово 2" value="${words[1] || ''}">
-                                <input type="text" id="w3" placeholder="Слово 3" value="${words[2] || ''}">
+                                <input type="text" id="w1" class="word-input" placeholder="Слово 1" value="${words[0] || ''}">
+                                <input type="text" id="w2" class="word-input" placeholder="Слово 2" value="${words[1] || ''}">
+                                <input type="text" id="w3" class="word-input" placeholder="Слово 3" value="${words[2] || ''}">
                             </div>
                         `;
                         isNextDisabled = !(words[0] && words[1] && words[2]);
@@ -387,102 +385,109 @@
                         </div>
                     `;
                 } else {
-                    // Финал
                     const finalText = "Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.";
                     html = `
                         <div class="text-content" style="margin-bottom: 0;">
                             ${generateAnimatedText(finalText)}
                         </div>
                     `;
-                    console.log("Данные готовы к отправке:", userAnswers);
+                    console.log("Ответы анкеты:", userAnswers);
                 }
 
                 container.innerHTML = html;
                 container.classList.remove('fade-out');
                 container.classList.add('fade-in');
 
-                attachEventListeners(q);
-
             }, 300);
         }
 
-        // Привязываем события через JS, чтобы избежать любых багов с onclick в HTML
-        function attachEventListeners(q) {
-            // Кнопка Старт
-            const startBtn = document.getElementById('startBtn');
-            if (startBtn) {
-                startBtn.addEventListener('click', () => { currentStep++; renderStep(); });
+        // ЖЕЛЕЗОБЕТОННЫЙ ОБРАБОТЧИК КЛИКОВ (Делегирование событий на уровне документа)
+        document.addEventListener('click', function(e) {
+            // Клик по кнопке "Заполнить анкету"
+            if (e.target && e.target.id === 'startBtn') {
+                currentStep = 0;
+                renderStep();
+                return;
             }
 
-            // Кнопка Назад
-            const backBtn = document.getElementById('backBtn');
-            if (backBtn) {
-                backBtn.addEventListener('click', () => { currentStep--; renderStep(); });
+            // Клик по кнопке "Назад"
+            if (e.target && e.target.id === 'backBtn') {
+                currentStep--;
+                renderStep();
+                return;
             }
 
-            // Кнопка Далее / Отправить
+            // Клик по кнопке Да/Нет
+            if (e.target && e.target.classList.contains('choice-btn')) {
+                const btns = document.querySelectorAll('.choice-btn');
+                btns.forEach(btn => btn.classList.remove('active'));
+                
+                e.target.classList.add('active');
+                tempChoice = e.target.getAttribute('data-val');
+                
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) nextBtn.disabled = false;
+                return;
+            }
+
+            // Клик по кнопке "Далее" / "Отправить"
+            if (e.target && e.target.id === 'nextBtn') {
+                const q = questions[currentStep];
+                
+                if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
+                    userAnswers[q.id] = document.getElementById('answerInput').value.trim();
+                } else if (q.type === 'words') {
+                    const w1 = document.getElementById('w1').value.trim();
+                    const w2 = document.getElementById('w2').value.trim();
+                    const w3 = document.getElementById('w3').value.trim();
+                    userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
+                } else if (q.type === 'choice') {
+                    userAnswers[q.id] = tempChoice;
+                }
+                
+                currentStep++;
+                renderStep();
+                return;
+            }
+        });
+
+        // Отслеживание ввода во всех полях (для активации кнопок)
+        document.addEventListener('input', function(e) {
+            if (!questions[currentStep]) return;
+            const q = questions[currentStep];
             const nextBtn = document.getElementById('nextBtn');
-            if (nextBtn) {
-                nextBtn.addEventListener('click', () => {
-                    // Сохраняем ответ перед переходом
-                    if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
-                        userAnswers[q.id] = document.getElementById('answerInput').value.trim();
-                    } else if (q.type === 'words') {
-                        const w1 = document.getElementById('w1').value.trim();
-                        const w2 = document.getElementById('w2').value.trim();
-                        const w3 = document.getElementById('w3').value.trim();
-                        userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
-                    } else if (q.type === 'choice') {
-                        userAnswers[q.id] = tempChoice;
-                    }
-                    currentStep++;
-                    renderStep();
-                });
+
+            if (!nextBtn) return;
+
+            // Обработка обычного ввода
+            if (e.target && e.target.classList.contains('custom-input')) {
+                nextBtn.disabled = e.target.value.trim().length === 0;
             }
 
-            // Логика проверки ввода (чтобы кнопка "Далее" становилась активной)
-            if (q) {
-                if (q.type === 'text' || q.type === 'textarea') {
-                    const input = document.getElementById('answerInput');
-                    input.addEventListener('input', () => {
-                        nextBtn.disabled = input.value.trim().length === 0;
-                    });
-                } 
-                else if (q.type === 'slider') {
-                    const input = document.getElementById('answerInput');
-                    const valDisplay = document.getElementById('sliderVal');
-                    input.addEventListener('input', (e) => {
-                        valDisplay.innerText = e.target.value;
-                    });
-                }
-                else if (q.type === 'words') {
-                    const w1 = document.getElementById('w1');
-                    const w2 = document.getElementById('w2');
-                    const w3 = document.getElementById('w3');
-                    const checkWords = () => {
-                        if(w1.value.includes(' ')) w1.value = w1.value.replace(/\s/g, '');
-                        if(w2.value.includes(' ')) w2.value = w2.value.replace(/\s/g, '');
-                        if(w3.value.includes(' ')) w3.value = w3.value.replace(/\s/g, '');
-                        nextBtn.disabled = !(w1.value.trim() && w2.value.trim() && w3.value.trim());
-                    };
-                    w1.addEventListener('input', checkWords);
-                    w2.addEventListener('input', checkWords);
-                    w3.addEventListener('input', checkWords);
-                }
-                else if (q.type === 'choice') {
-                    const btns = document.querySelectorAll('.choice-btn');
-                    btns.forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            btns.forEach(b => b.classList.remove('active'));
-                            e.target.classList.add('active');
-                            tempChoice = e.target.getAttribute('data-val');
-                            nextBtn.disabled = false;
-                        });
-                    });
+            // Обработка слайдера
+            if (e.target && e.target.classList.contains('custom-slider')) {
+                const valDisplay = document.getElementById('sliderVal');
+                if (valDisplay) valDisplay.innerText = e.target.value;
+            }
+
+            // Обработка 3-х слов
+            if (e.target && e.target.classList.contains('word-input')) {
+                const w1 = document.getElementById('w1');
+                const w2 = document.getElementById('w2');
+                const w3 = document.getElementById('w3');
+
+                if (w1 && w2 && w3) {
+                    // Удаляем пробелы "на лету"
+                    if (w1.value.includes(' ')) w1.value = w1.value.replace(/\s/g, '');
+                    if (w2.value.includes(' ')) w2.value = w2.value.replace(/\s/g, '');
+                    if (w3.value.includes(' ')) w3.value = w3.value.replace(/\s/g, '');
+
+                    nextBtn.disabled = !(w1.value.trim() && w2.value.trim() && w3.value.trim());
                 }
             }
-        }
+        });
 
+        // Первичный запуск первой страницы
         renderStep();
     </script>
 </body>
