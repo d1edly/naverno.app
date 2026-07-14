@@ -426,6 +426,7 @@
     <div class="container" id="main-container"></div>
 
     <script>
+        // Инициализируем VK Bridge для связи с API ВКонтакте
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
         // ВОПРОСЫ
@@ -469,7 +470,6 @@
         function renderLockedScreen() {
             container.innerHTML = `
                 <div class="locked-container fade-in">
-                    <!-- Красивая векторная иконка замка с неоновым свечением -->
                     <svg class="lock-icon-svg" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -483,14 +483,12 @@
                     </div>
                 </div>
             `;
-            // Принудительно возвращаем стеклянные стили контейнеру, чтобы текст не сливался с фоном
             container.style.background = "rgba(20, 20, 20, 0.4)";
             container.style.border = "1px solid rgba(255, 255, 255, 0.08)";
             container.style.backdropFilter = "blur(20px)";
         }
 
         function renderStep() {
-            // Если анкета уже была заполнена — выводим только экран блокировки
             if (isAlreadySubmitted) {
                 renderLockedScreen();
                 return;
@@ -633,7 +631,42 @@
                     
                     // Блокируем повторное заполнение локально
                     localStorage.setItem('naverno_anketa_submitted', 'true');
-                    console.log("Данные анкеты:", userAnswers);
+
+                    // --- ИНТЕГРАЦИЯ С БЭКЕНДОМ GOOGLE APPS SCRIPT ---
+                    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
+
+                    vkBridge.send('VKWebAppGetUserInfo')
+                        .then(user => {
+                            const finalData = {
+                                ...userAnswers,
+                                userName: user.first_name + " " + user.last_name,
+                                userId: user.id
+                            };
+
+                            fetch(scriptUrl, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(finalData)
+                            })
+                            .then(() => console.log('Данные отправлены на скрипт!'))
+                            .catch(err => console.error('Ошибка fetch отправки:', err));
+                        })
+                        .catch(err => {
+                            console.error('Ошибка получения данных VK профиля:', err);
+                            // Если не удалось получить профиль (например, тест вне приложения ВК), шлем анонимно
+                            const finalData = {
+                                ...userAnswers,
+                                userName: "Аноним",
+                                userId: 0
+                            };
+                            fetch(scriptUrl, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(finalData)
+                            });
+                        });
 
                     // Спустя ровно 5 секунд переключаем на красивую заглушку с кастомным замком
                     setTimeout(() => {
