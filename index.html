@@ -16,7 +16,7 @@
             src: url('ofont.ru_Lemon.ttf') format('truetype');
         }
 
-        /* Анимированный фон с плавающими элементами */
+        /* Анимированный фон */
         body, html {
             margin: 0;
             padding: 0;
@@ -32,14 +32,13 @@
             justify-content: center;
         }
 
-        /* Атмосферные пятна на фоне */
         .blob {
             position: absolute;
             filter: blur(90px);
             z-index: 0;
             opacity: 0.6;
             animation: float 15s infinite ease-in-out alternate;
-            pointer-events: none; /* Чтобы фон не мешал кликам */
+            pointer-events: none;
         }
         .blob-1 {
             width: 300px;
@@ -74,7 +73,7 @@
             z-index: 2;
         }
 
-        /* Стеклянная плашка (Glassmorphism) */
+        /* Стеклянная плашка */
         .container {
             width: 90%;
             max-width: 500px;
@@ -96,11 +95,11 @@
 
         .container:hover {
             border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 255, 255, 0.03);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
             transform: translateY(-2px);
         }
 
-        /* Плавное появление слов (стартовый текст) */
+        /* Появление слов */
         .word-reveal {
             opacity: 0;
             display: inline-block;
@@ -119,7 +118,7 @@
             color: #e0e0e0;
         }
 
-        /* Поля ввода */
+        /* Ввод текста */
         input[type="text"], textarea {
             width: 100%;
             box-sizing: border-box;
@@ -141,7 +140,6 @@
             background: rgba(20, 20, 20, 0.8);
         }
 
-        /* Три слова */
         .words-grid {
             display: flex;
             gap: 12px;
@@ -152,41 +150,151 @@
             text-align: center;
         }
 
-        /* Ползунки */
+        /* Слайдеры с плавной анимацией движения */
         .slider-value {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-family: 'MarkerFat', sans-serif;
             margin-bottom: 15px;
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transition: transform 0.1s ease;
         }
         
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
-            height: 6px;
-            border-radius: 5px;
+            height: 8px;
+            border-radius: 10px;
             outline: none;
             margin-bottom: 30px;
+            transition: background 0.3s ease;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             background: #ffffff;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            transition: transform 0.2s;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            /* Добавляем плавность перемещения ползунка */
+            transition: transform 0.1s ease, background-color 0.2s ease; 
         }
         
         input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        /* Сетка дней недели */
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .day-btn {
+            padding: 12px 5px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Lemon', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .day-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .day-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Интерактивные часы в стиле "электро" */
+        .time-picker-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .time-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 16px;
+            min-width: 100px;
+        }
+
+        .time-block-label {
+            font-size: 0.8rem;
+            color: #888888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .time-num-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-arrow {
+            background: none;
+            border: none;
+            color: #888888;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 2px 10px;
+            transition: color 0.2s, transform 0.1s;
+            user-select: none;
+        }
+
+        .time-arrow:hover {
+            color: #ffffff;
             transform: scale(1.2);
         }
 
-        /* Кнопки Да/Нет */
+        .time-val {
+            font-family: 'MarkerFat', sans-serif;
+            font-size: 1.8rem;
+            width: 45px;
+            text-align: center;
+        }
+
+        .time-separator {
+            font-family: 'MarkerFat', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Выбор Да/Нет */
         .choice-grid {
             display: flex;
             gap: 15px;
@@ -213,7 +321,7 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        /* Основные кнопки (Далее, Назад) */
+        /* Навигация */
         .nav-buttons {
             display: flex;
             gap: 12px;
@@ -262,7 +370,6 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Анимация переходов карточек */
         .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
         .fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
 
@@ -279,15 +386,12 @@
 </head>
 <body>
 
-    <!-- Атмосферный фон -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
     <div class="header">NAVERNO</div>
 
-    <div class="container" id="main-container">
-        <!-- Контент подгружается скриптом -->
-    </div>
+    <div class="container" id="main-container"></div>
 
     <script>
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
@@ -301,17 +405,23 @@
             { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "words" },
             { id: "q7", text: "Вероятно нам для съёмок понадобится взаимодействие с тобой в дискорде, не будет такого что ты будешь нас перебивать и так далее?", type: "textarea", placeholder: "Твой ответ..." },
             { id: "q8", text: "Эти слова про тебя? - могу предложить в идее что-то изменить, улучшить и при этом не постесняюсь", type: "choice" },
-            { id: "q9", text: "В какие дни ты обычно свободен?", type: "text", placeholder: "Например: Пн, Ср, Пт" },
-            { id: "q10", text: "И по времени хотелось бы понимать, какой диапазон (с какого времени до какого)", type: "text", placeholder: "Например: с 18:00 до 22:00" }
+            { id: "q9", text: "В какие дни ты обычно свободен?", type: "days" },
+            { id: "q10", text: "И по времени хотелось бы понимать, какой диапазон (с какого времени до какого)", type: "timepicker" }
         ];
 
         let currentStep = -1;
         let userAnswers = {};
         let tempChoice = ""; 
+        let selectedDays = [];
+
+        // Для интерактивных часов
+        let timeFromHour = 18;
+        let timeFromMin = 0;
+        let timeToHour = 22;
+        let timeToMin = 0;
 
         const container = document.getElementById('main-container');
 
-        // Генерирует текст, который красиво появляется по словам
         function generateAnimatedText(text) {
             return text.split(' ').map((word, index) => {
                 let delay = index * 0.04;
@@ -372,6 +482,68 @@
                             </div>
                         `;
                         isNextDisabled = !tempChoice;
+                    } else if (q.type === 'days') {
+                        selectedDays = savedVal ? savedVal.split(", ") : [];
+                        const daysList = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс", "Каждый день"];
+                        let daysButtons = daysList.map(day => {
+                            const activeClass = selectedDays.includes(day) ? 'active' : '';
+                            return `<button class="day-btn ${activeClass}" data-day="${day}">${day}</button>`;
+                        }).join('');
+
+                        inputHtml = `<div class="days-grid">${daysButtons}</div>`;
+                        isNextDisabled = selectedDays.length === 0;
+                    } else if (q.type === 'timepicker') {
+                        if (savedVal) {
+                            const parse = savedVal.match(/с (\d+):(\d+) до (\d+):(\d+)/);
+                            if (parse) {
+                                timeFromHour = parseInt(parse[1]);
+                                timeFromMin = parseInt(parse[2]);
+                                timeToHour = parseInt(parse[3]);
+                                timeToMin = parseInt(parse[4]);
+                            }
+                        }
+                        const fH = String(timeFromHour).padStart(2, '0');
+                        const fM = String(timeFromMin).padStart(2, '0');
+                        const tH = String(timeToHour).padStart(2, '0');
+                        const tM = String(timeToMin).padStart(2, '0');
+
+                        inputHtml = `
+                            <div class="time-picker-container">
+                                <div class="time-block">
+                                    <div class="time-block-label">С</div>
+                                    <div class="time-display">
+                                        <div class="time-num-group">
+                                            <button class="time-arrow" data-action="up" data-target="fromHour">▲</button>
+                                            <span class="time-val" id="fromHour">${fH}</span>
+                                            <button class="time-arrow" data-action="down" data-target="fromHour">▼</button>
+                                        </div>
+                                        <span class="time-separator">:</span>
+                                        <div class="time-num-group">
+                                            <button class="time-arrow" data-action="up" data-target="fromMin">▲</button>
+                                            <span class="time-val" id="fromMin">${fM}</span>
+                                            <button class="time-arrow" data-action="down" data-target="fromMin">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="time-block">
+                                    <div class="time-block-label">ДО</div>
+                                    <div class="time-display">
+                                        <div class="time-num-group">
+                                            <button class="time-arrow" data-action="up" data-target="toHour">▲</button>
+                                            <span class="time-val" id="toHour">${tH}</span>
+                                            <button class="time-arrow" data-action="down" data-target="toHour">▼</button>
+                                        </div>
+                                        <span class="time-separator">:</span>
+                                        <div class="time-num-group">
+                                            <button class="time-arrow" data-action="up" data-target="toMin">▲</button>
+                                            <span class="time-val" id="toMin">${tM}</span>
+                                            <button class="time-arrow" data-action="down" data-target="toMin">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        isNextDisabled = false;
                     }
 
                     const btnText = (currentStep === questions.length - 1) ? "Отправить" : "Далее";
@@ -391,7 +563,7 @@
                             ${generateAnimatedText(finalText)}
                         </div>
                     `;
-                    console.log("Ответы анкеты:", userAnswers);
+                    console.log("Данные анкеты:", userAnswers);
                 }
 
                 container.innerHTML = html;
@@ -401,36 +573,90 @@
             }, 300);
         }
 
-        // ЖЕЛЕЗОБЕТОННЫЙ ОБРАБОТЧИК КЛИКОВ (Делегирование событий на уровне документа)
+        // Обработчик кликов
         document.addEventListener('click', function(e) {
-            // Клик по кнопке "Заполнить анкету"
             if (e.target && e.target.id === 'startBtn') {
                 currentStep = 0;
                 renderStep();
                 return;
             }
 
-            // Клик по кнопке "Назад"
             if (e.target && e.target.id === 'backBtn') {
                 currentStep--;
                 renderStep();
                 return;
             }
 
-            // Клик по кнопке Да/Нет
+            // Кнопки Да/Нет
             if (e.target && e.target.classList.contains('choice-btn')) {
                 const btns = document.querySelectorAll('.choice-btn');
                 btns.forEach(btn => btn.classList.remove('active'));
-                
                 e.target.classList.add('active');
                 tempChoice = e.target.getAttribute('data-val');
-                
                 const nextBtn = document.getElementById('nextBtn');
                 if (nextBtn) nextBtn.disabled = false;
                 return;
             }
 
-            // Клик по кнопке "Далее" / "Отправить"
+            // Выбор дней недели
+            if (e.target && e.target.classList.contains('day-btn')) {
+                const day = e.target.getAttribute('data-day');
+                
+                if (day === "Каждый день") {
+                    if (selectedDays.includes("Каждый день")) {
+                        selectedDays = [];
+                    } else {
+                        selectedDays = ["Каждый день"];
+                    }
+                } else {
+                    // Если выбран обычный день, убираем "Каждый день"
+                    selectedDays = selectedDays.filter(d => d !== "Каждый день");
+                    
+                    if (selectedDays.includes(day)) {
+                        selectedDays = selectedDays.filter(d => d !== day);
+                    } else {
+                        selectedDays.push(day);
+                    }
+                }
+
+                // Визуально переключаем активные кнопки
+                const btns = document.querySelectorAll('.day-btn');
+                btns.forEach(btn => {
+                    const bDay = btn.getAttribute('data-day');
+                    if (selectedDays.includes(bDay)) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) nextBtn.disabled = selectedDays.length === 0;
+                return;
+            }
+
+            // Нажатие стрелочек в часах
+            if (e.target && e.target.classList.contains('time-arrow')) {
+                const action = e.target.getAttribute('data-action');
+                const target = e.target.getAttribute('data-target');
+
+                if (target === 'fromHour') {
+                    timeFromHour = (action === 'up') ? (timeFromHour + 1) % 24 : (timeFromHour - 1 + 24) % 24;
+                    document.getElementById('fromHour').innerText = String(timeFromHour).padStart(2, '0');
+                } else if (target === 'toHour') {
+                    timeToHour = (action === 'up') ? (timeToHour + 1) % 24 : (timeToHour - 1 + 24) % 24;
+                    document.getElementById('toHour').innerText = String(timeToHour).padStart(2, '0');
+                } else if (target === 'fromMin') {
+                    timeFromMin = (action === 'up') ? (timeFromMin + 5) % 60 : (timeFromMin - 5 + 60) % 60;
+                    document.getElementById('fromMin').innerText = String(timeFromMin).padStart(2, '0');
+                } else if (target === 'toMin') {
+                    timeToMin = (action === 'up') ? (timeToMin + 5) % 60 : (timeToMin - 5 + 60) % 60;
+                    document.getElementById('toMin').innerText = String(timeToMin).padStart(2, '0');
+                }
+                return;
+            }
+
+            // Кнопка Далее
             if (e.target && e.target.id === 'nextBtn') {
                 const q = questions[currentStep];
                 
@@ -443,6 +669,14 @@
                     userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
                 } else if (q.type === 'choice') {
                     userAnswers[q.id] = tempChoice;
+                } else if (q.type === 'days') {
+                    userAnswers[q.id] = selectedDays.join(', ');
+                } else if (q.type === 'timepicker') {
+                    const fH = String(timeFromHour).padStart(2, '0');
+                    const fM = String(timeFromMin).padStart(2, '0');
+                    const tH = String(timeToHour).padStart(2, '0');
+                    const tM = String(timeToMin).padStart(2, '0');
+                    userAnswers[q.id] = `с ${fH}:${fM} до ${tH}:${tM}`;
                 }
                 
                 currentStep++;
@@ -451,7 +685,7 @@
             }
         });
 
-        // Отслеживание ввода во всех полях (для активации кнопок)
+        // Отслеживание ввода
         document.addEventListener('input', function(e) {
             if (!questions[currentStep]) return;
             const q = questions[currentStep];
@@ -459,25 +693,26 @@
 
             if (!nextBtn) return;
 
-            // Обработка обычного ввода
             if (e.target && e.target.classList.contains('custom-input')) {
                 nextBtn.disabled = e.target.value.trim().length === 0;
             }
 
-            // Обработка слайдера
             if (e.target && e.target.classList.contains('custom-slider')) {
                 const valDisplay = document.getElementById('sliderVal');
-                if (valDisplay) valDisplay.innerText = e.target.value;
+                if (valDisplay) {
+                    valDisplay.innerText = e.target.value;
+                    // Плавный микро-эффект "пульсации" цифры при смене значения
+                    valDisplay.style.transform = 'scale(1.15)';
+                    setTimeout(() => valDisplay.style.transform = 'scale(1)', 100);
+                }
             }
 
-            // Обработка 3-х слов
             if (e.target && e.target.classList.contains('word-input')) {
                 const w1 = document.getElementById('w1');
                 const w2 = document.getElementById('w2');
                 const w3 = document.getElementById('w3');
 
                 if (w1 && w2 && w3) {
-                    // Удаляем пробелы "на лету"
                     if (w1.value.includes(' ')) w1.value = w1.value.replace(/\s/g, '');
                     if (w2.value.includes(' ')) w2.value = w2.value.replace(/\s/g, '');
                     if (w3.value.includes(' ')) w3.value = w3.value.replace(/\s/g, '');
@@ -487,7 +722,6 @@
             }
         });
 
-        // Первичный запуск первой страницы
         renderStep();
     </script>
 </body>
