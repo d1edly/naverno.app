@@ -140,17 +140,20 @@
             background: rgba(20, 20, 20, 0.8);
         }
 
-        .words-grid {
+        /* Вертикальная сетка для 3 слов (широкие плашки) */
+        .words-column {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 100%;
         }
-        .words-grid input {
+        .words-column input {
             margin-bottom: 0;
             text-align: center;
         }
 
-        /* Слайдеры с плавной анимацией движения */
+        /* Слайдеры */
         .slider-value {
             font-size: 2.5rem;
             font-family: 'MarkerFat', sans-serif;
@@ -168,7 +171,6 @@
             border-radius: 10px;
             outline: none;
             margin-bottom: 30px;
-            transition: background 0.3s ease;
         }
 
         input[type="range"]::-webkit-slider-thumb {
@@ -179,7 +181,6 @@
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-            /* Добавляем плавность перемещения ползунка */
             transition: transform 0.1s ease, background-color 0.2s ease; 
         }
         
@@ -187,7 +188,7 @@
             transform: scale(1.15);
         }
 
-        /* Сетка дней недели */
+        /* Дни недели */
         .days-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -207,10 +208,7 @@
             transition: all 0.2s ease;
         }
 
-        .day-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
+        .day-btn:hover { background: rgba(255, 255, 255, 0.05); }
         .day-btn.active {
             background: #ffffff;
             color: #000000;
@@ -219,7 +217,7 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
-        /* Интерактивные часы в стиле "электро" */
+        /* Электронные часы */
         .time-picker-container {
             display: flex;
             justify-content: center;
@@ -294,7 +292,7 @@
             50% { opacity: 0.3; }
         }
 
-        /* Выбор Да/Нет */
+        /* Кнопки Да/Нет */
         .choice-grid {
             display: flex;
             gap: 15px;
@@ -370,6 +368,40 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
+        /* Стили для экрана блокировки (заглушки) */
+        .locked-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+            animation: pulse-lock 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-lock {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .locked-title {
+            font-family: 'MarkerFat', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .locked-subtitle {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #888888;
+        }
+
         .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
         .fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
 
@@ -396,10 +428,12 @@
     <script>
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
+        // ВОПРОСЫ
         const questions = [
             { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "slider", min: 1, max: 10, default: 10 },
             { id: "q2", text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
             { id: "q3", text: "Ого, а почему вообще захотел стать частью нашей студии?", type: "textarea", placeholder: "Твой ответ..." },
+            // Минимальный год изменен на 2016
             { id: "q4", text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", type: "slider", min: 2016, max: 2026, default: 2020 },
             { id: "q5", text: "А какой лвл у тебя?", type: "slider", min: 1, max: 100, default: 10 },
             { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "words" },
@@ -422,6 +456,9 @@
 
         const container = document.getElementById('main-container');
 
+        // Проверяем, проходил ли юзер анкету ранее
+        const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
+
         function generateAnimatedText(text) {
             return text.split(' ').map((word, index) => {
                 let delay = index * 0.04;
@@ -429,7 +466,27 @@
             }).join(' ');
         }
 
+        // Экран красивой заглушки "Доступ закрыт"
+        function renderLockedScreen() {
+            container.innerHTML = `
+                <div class="locked-container fade-in">
+                    <div class="lock-icon">🔒</div>
+                    <div class="locked-title">АНКЕТА ОТПРАВЛЕНА</div>
+                    <div class="locked-subtitle">
+                        Твои ответы уже улетели к нам. <br>
+                        Мы изучим их и свяжемся в ЛС, если ты нам подойдёшь. Повторно заполнить форму нельзя.
+                    </div>
+                </div>
+            `;
+        }
+
         function renderStep() {
+            // Если анкета уже была заполнена — выводим только экран блокировки
+            if (isAlreadySubmitted) {
+                renderLockedScreen();
+                return;
+            }
+
             container.classList.remove('fade-in');
             container.classList.add('fade-out');
 
@@ -465,11 +522,12 @@
                         isNextDisabled = false; 
                     } else if (q.type === 'words') {
                         const words = savedVal ? savedVal.split(", ") : ["", "", ""];
+                        // Переделано в вертикальную колонку .words-column для широких полей ввода
                         inputHtml = `
-                            <div class="words-grid">
-                                <input type="text" id="w1" class="word-input" placeholder="Слово 1" value="${words[0] || ''}">
-                                <input type="text" id="w2" class="word-input" placeholder="Слово 2" value="${words[1] || ''}">
-                                <input type="text" id="w3" class="word-input" placeholder="Слово 3" value="${words[2] || ''}">
+                            <div class="words-column">
+                                <input type="text" id="w1" class="word-input" placeholder="Слово №1 (например: Добрый)" value="${words[0] || ''}">
+                                <input type="text" id="w2" class="word-input" placeholder="Слово №2 (например: Отзывчивый)" value="${words[1] || ''}">
+                                <input type="text" id="w3" class="word-input" placeholder="Слово №3 (например: Адекватный)" value="${words[2] || ''}">
                             </div>
                         `;
                         isNextDisabled = !(words[0] && words[1] && words[2]);
@@ -557,13 +615,26 @@
                         </div>
                     `;
                 } else {
+                    // Экран успешной отправки
                     const finalText = "Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.";
                     html = `
                         <div class="text-content" style="margin-bottom: 0;">
                             ${generateAnimatedText(finalText)}
                         </div>
                     `;
+                    
+                    // Блокируем повторное заполнение локально
+                    localStorage.setItem('naverno_anketa_submitted', 'true');
                     console.log("Данные анкеты:", userAnswers);
+
+                    // Спустя ровно 5 секунд переключаем на красивую заглушку
+                    setTimeout(() => {
+                        container.classList.remove('fade-in');
+                        container.classList.add('fade-out');
+                        setTimeout(() => {
+                            renderLockedScreen();
+                        }, 300);
+                    }, 5000);
                 }
 
                 container.innerHTML = html;
@@ -573,7 +644,7 @@
             }, 300);
         }
 
-        // Обработчик кликов
+        // Обработчики кликов
         document.addEventListener('click', function(e) {
             if (e.target && e.target.id === 'startBtn') {
                 currentStep = 0;
@@ -587,7 +658,6 @@
                 return;
             }
 
-            // Кнопки Да/Нет
             if (e.target && e.target.classList.contains('choice-btn')) {
                 const btns = document.querySelectorAll('.choice-btn');
                 btns.forEach(btn => btn.classList.remove('active'));
@@ -598,7 +668,6 @@
                 return;
             }
 
-            // Выбор дней недели
             if (e.target && e.target.classList.contains('day-btn')) {
                 const day = e.target.getAttribute('data-day');
                 
@@ -609,7 +678,6 @@
                         selectedDays = ["Каждый день"];
                     }
                 } else {
-                    // Если выбран обычный день, убираем "Каждый день"
                     selectedDays = selectedDays.filter(d => d !== "Каждый день");
                     
                     if (selectedDays.includes(day)) {
@@ -619,7 +687,6 @@
                     }
                 }
 
-                // Визуально переключаем активные кнопки
                 const btns = document.querySelectorAll('.day-btn');
                 btns.forEach(btn => {
                     const bDay = btn.getAttribute('data-day');
@@ -635,7 +702,6 @@
                 return;
             }
 
-            // Нажатие стрелочек в часах
             if (e.target && e.target.classList.contains('time-arrow')) {
                 const action = e.target.getAttribute('data-action');
                 const target = e.target.getAttribute('data-target');
@@ -656,7 +722,6 @@
                 return;
             }
 
-            // Кнопка Далее
             if (e.target && e.target.id === 'nextBtn') {
                 const q = questions[currentStep];
                 
@@ -701,7 +766,6 @@
                 const valDisplay = document.getElementById('sliderVal');
                 if (valDisplay) {
                     valDisplay.innerText = e.target.value;
-                    // Плавный микро-эффект "пульсации" цифры при смене значения
                     valDisplay.style.transform = 'scale(1.15)';
                     setTimeout(() => valDisplay.style.transform = 'scale(1)', 100);
                 }
