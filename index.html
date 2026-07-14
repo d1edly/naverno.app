@@ -1,11 +1,291 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>NAVERNO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Анкета NAVERNO</title>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <style>
+        /* Подключение твоих кастомных шрифтов */
+        @font-face {
+            font-family: 'MarkerFat';
+            src: url('Marker Fat.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Lemon';
+            src: url('ofont.ru_Lemon.ttf') format('truetype');
+        }
+
+        /* Общие стили и фон с глубиной */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #222222 0%, #050505 100%);
+            color: #ffffff;
+            font-family: 'Lemon', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Логотип */
+        .header {
+            font-family: 'MarkerFat', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 2px;
+            margin-top: 40px;
+            text-align: center;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            z-index: 2;
+        }
+
+        /* Центральный контейнер (эффект матового стекла) */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        /* Тексты */
+        .text-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Поля ввода */
+        input[type="text"], textarea {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-family: 'Lemon', sans-serif;
+            font-size: 1rem;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border 0.3s ease;
+            resize: none;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border: 1px solid #ffffff;
+        }
+
+        /* Кастомные радио-кнопки (Да/Нет) */
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .radio-label input {
+            margin-right: 10px;
+            accent-color: #ffffff;
+            transform: scale(1.2);
+        }
+
+        /* Кнопки */
+        .btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Lemon', sans-serif;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #cccccc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+        }
+
+        .btn:disabled {
+            background: #555555;
+            color: #888888;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Анимации */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+    </style>
 </head>
 <body>
-    <h1 style="text-align: center; font-family: sans-serif;">Привет, это NAVERNO!</h1>
-    <p style="text-align: center; font-family: sans-serif;">Дизайн сайта пока простой, но он работает.</p>
+
+    <div class="header">NAVERNO</div>
+
+    <div class="container" id="main-container">
+        <!-- Сюда будет динамически подгружаться контент -->
+    </div>
+
+    <script>
+        vkBridge.send('VKWebAppInit');
+
+        // Массив с вопросами (задел на будущее для бота)
+        const questions = [
+            { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "text", placeholder: "Например: 10/10" },
+            { id: "q2", text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
+            { id: "q3", text: "Ого, а почему вообще захотел стать частью нашей студии?", type: "textarea", placeholder: "Твой ответ..." },
+            { id: "q4", text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", type: "text", placeholder: "Напиши год" },
+            { id: "q5", text: "А какой лвл у тебя?", type: "text", placeholder: "Твой уровень" },
+            { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "text", placeholder: "Слово 1, Слово 2, Слово 3" },
+            { id: "q7", text: "Вероятно нам для съёмок понадобится взаимодействие с тобой в дискорде, не будет такого что ты будешь нас перебивать и так далее?", type: "textarea", placeholder: "Твой ответ..." },
+            { id: "q8", text: "Эти слова про тебя? - могу предложить в идее что-то изменить, улучшить и при этом не постесняюсь", type: "radio" },
+            { id: "q9", text: "В какие дни ты обычно свободен?", type: "text", placeholder: "Например: Пн, Ср, Пт" },
+            { id: "q10", text: "И по времени хотелось бы понимать, какой диапазон (с какого времени до какого)", type: "text", placeholder: "Например: с 18:00 до 22:00" }
+        ];
+
+        let currentStep = -1; // -1: Приветствие, 0-9: Вопросы, 10: Финал
+        let userAnswers = {}; // Сюда мы собираем ответы для бота
+
+        const container = document.getElementById('main-container');
+
+        // Функция отрисовки интерфейса с анимацией
+        function renderStep() {
+            container.classList.remove('fade-in');
+            container.classList.add('fade-out');
+
+            setTimeout(() => {
+                let html = '';
+
+                if (currentStep === -1) {
+                    // Стартовый экран
+                    html = `
+                        <div class="text-content">
+                            Здарова! Мы тут решили набрать какое-то количество людей в актёрский состав, чтобы у нас было больше свободы фантазии, если ты хочешь двигаться с нами, то нам нужно о тебе немного узнать, для этого тебе нужно заполнить анкету.
+                        </div>
+                        <button class="btn" onclick="nextStep()">Заполнить анкету</button>
+                    `;
+                } else if (currentStep < questions.length) {
+                    // Экран вопроса
+                    const q = questions[currentStep];
+                    let inputHtml = '';
+                    
+                    if (q.type === 'text') {
+                        inputHtml = `<input type="text" id="answerInput" placeholder="${q.placeholder}" oninput="checkInput()">`;
+                    } else if (q.type === 'textarea') {
+                        inputHtml = `<textarea id="answerInput" rows="3" placeholder="${q.placeholder}" oninput="checkInput()"></textarea>`;
+                    } else if (q.type === 'radio') {
+                        inputHtml = `
+                            <div class="radio-group">
+                                <label class="radio-label"><input type="radio" name="r_answer" value="Да" onchange="checkInput()"> Да</label>
+                                <label class="radio-label"><input type="radio" name="r_answer" value="Нет" onchange="checkInput()"> Нет</label>
+                            </div>
+                        `;
+                    }
+
+                    // Если это последний вопрос, меняем текст кнопки
+                    const btnText = (currentStep === questions.length - 1) ? "Отправить анкету на рассмотрение" : "Далее";
+
+                    html = `
+                        <div class="text-content">${q.text}</div>
+                        ${inputHtml}
+                        <button class="btn" id="nextBtn" onclick="saveAnswerAndNext()" disabled>${btnText}</button>
+                    `;
+                } else {
+                    // Финальный экран
+                    html = `
+                        <div class="text-content">
+                            Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.
+                        </div>
+                    `;
+                    
+                    // ЗДЕСЬ ПОЗЖЕ БУДЕТ КОД ОТПРАВКИ В БОТА
+                    console.log("Собранные данные для отправки:", userAnswers);
+                }
+
+                container.innerHTML = html;
+                container.classList.remove('fade-out');
+                container.classList.add('fade-in');
+            }, 300); // Ждем завершения анимации затухания
+        }
+
+        // Проверка: кнопка "Далее" не активна, пока человек ничего не написал
+        function checkInput() {
+            const btn = document.getElementById('nextBtn');
+            const q = questions[currentStep];
+            
+            if (q.type === 'radio') {
+                const checked = document.querySelector('input[name="r_answer"]:checked');
+                btn.disabled = !checked;
+            } else {
+                const val = document.getElementById('answerInput').value.trim();
+                btn.disabled = val.length === 0;
+            }
+        }
+
+        // Сохранение ответа и переход
+        function saveAnswerAndNext() {
+            const q = questions[currentStep];
+            let val = '';
+            
+            if (q.type === 'radio') {
+                val = document.querySelector('input[name="r_answer"]:checked').value;
+            } else {
+                val = document.getElementById('answerInput').value.trim();
+            }
+
+            userAnswers[q.id] = val; // Сохраняем в память
+            nextStep();
+        }
+
+        function nextStep() {
+            currentStep++;
+            renderStep();
+        }
+
+        // Запуск при открытии
+        renderStep();
+    </script>
 </body>
 </html>
