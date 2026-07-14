@@ -6,7 +6,7 @@
     <title>Анкета NAVERNO</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
-        /* Подключение твоих кастомных шрифтов */
+        /* Шрифты */
         @font-face {
             font-family: 'MarkerFat';
             src: url('Marker Fat.otf') format('opentype');
@@ -16,75 +16,118 @@
             src: url('ofont.ru_Lemon.ttf') format('truetype');
         }
 
-
+        /* Анимированный фон с плавающими элементами */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background: #000000;
+            background-color: #050505;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
+            overflow: hidden; /* Скрываем скролл от фона */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Центрируем всё по вертикали */
-            overflow-x: hidden;
+            justify-content: center;
         }
 
-        /* Логотип */
+        /* Атмосферные пятна на фоне */
+        .blob {
+            position: absolute;
+            filter: blur(90px);
+            z-index: 0;
+            opacity: 0.6;
+            animation: float 15s infinite ease-in-out alternate;
+        }
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: #2a2a2a;
+            top: 10%;
+            left: 10%;
+        }
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #151515;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, 50px) scale(1.1); }
+            100% { transform: translate(-30px, -20px) scale(0.9); }
+        }
+
+        /* Заголовок NAVERNO */
         .header {
             font-family: 'MarkerFat', sans-serif;
             font-size: 3.5rem;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             margin-bottom: 30px;
             text-align: center;
-            text-shadow: 0 0 15px rgba(255,255,255,0.2);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             z-index: 2;
         }
 
-        /* Центральная плашка */
+        /* Стеклянная плашка (Glassmorphism) */
         .container {
             width: 90%;
             max-width: 500px;
             padding: 40px 30px;
-            background: #0a0a0a;
-            border: 1px solid #222222;
-            border-radius: 20px;
+            background: rgba(20, 20, 20, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             z-index: 2;
             transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        /* Подсветка плашки при наведении */
         .container:hover {
-            border-color: #444444;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 255, 255, 0.03);
             transform: translateY(-2px);
         }
 
-        .text-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            color: #eeeeee;
+        /* Плавное появление слов (стартовый текст) */
+        .word-reveal {
+            opacity: 0;
+            display: inline-block;
+            animation: fadeInWord 0.6s forwards ease-out;
+        }
+        
+        @keyframes fadeInWord {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Поля ввода (Текст) */
+        .text-content {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+        }
+
+        /* Поля ввода */
         input[type="text"], textarea {
             width: 100%;
             box-sizing: border-box;
-            background: #111111;
-            border: 1px solid #333333;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
             font-size: 1rem;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
             outline: none;
             transition: border 0.3s ease, background 0.3s ease;
@@ -93,13 +136,13 @@
 
         input[type="text"]:focus, textarea:focus {
             border-color: #ffffff;
-            background: #1a1a1a;
+            background: rgba(20, 20, 20, 0.8);
         }
 
-        /* Три слова в ряд */
+        /* Три слова */
         .words-grid {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
         }
         .words-grid input {
@@ -107,18 +150,19 @@
             text-align: center;
         }
 
-        /* Ползунки (Range) */
+        /* Ползунки */
         .slider-value {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-family: 'MarkerFat', sans-serif;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
         
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
-            background: #222222;
+            background: rgba(255, 255, 255, 0.1);
             height: 6px;
             border-radius: 5px;
             outline: none;
@@ -127,12 +171,12 @@
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             background: #ffffff;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
             transition: transform 0.2s;
         }
         
@@ -140,36 +184,37 @@
             transform: scale(1.2);
         }
 
-        /* Кнопки выбора Да/Нет */
+        /* Кнопки Да/Нет */
         .choice-grid {
             display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .choice-btn {
             flex: 1;
-            padding: 15px;
-            background: #111111;
-            border: 1px solid #333333;
-            border-radius: 10px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .choice-btn:hover { background: #222222; }
+        .choice-btn:hover { background: rgba(255, 255, 255, 0.05); }
         .choice-btn.active {
             background: #ffffff;
             color: #000000;
             border-color: #ffffff;
             font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        /* Навигационные кнопки (Далее / Назад) */
+        /* Основные кнопки (Далее, Назад) */
         .nav-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 10px;
         }
 
@@ -178,10 +223,10 @@
             background: #ffffff;
             color: #000000;
             border: none;
-            padding: 15px 20px;
+            padding: 16px 20px;
             font-family: 'Lemon', sans-serif;
             font-size: 1rem;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
@@ -189,56 +234,62 @@
         }
 
         .btn:hover:not(:disabled) {
-            background: #cccccc;
+            background: #e0e0e0;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
         }
 
         .btn:disabled {
-            background: #333333;
-            color: #666666;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-back {
             flex: 1;
             background: transparent;
-            color: #888888;
-            border: 1px solid #333333;
+            color: #aaaaaa;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .btn-back:hover {
-            background: #222222;
+            background: rgba(255, 255, 255, 0.05);
             color: #ffffff;
-            border-color: #666666;
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Анимации */
+        /* Анимация переходов карточек */
         .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
         .fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.97); }
             to { opacity: 1; transform: scale(1); }
         }
 
         @keyframes fadeOut {
             from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.95); }
+            to { opacity: 0; transform: scale(0.97); }
         }
     </style>
 </head>
 <body>
 
+    <!-- Атмосферный фон -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
     <div class="header">NAVERNO</div>
 
     <div class="container" id="main-container">
-        <!-- Контент -->
+        <!-- Контент подгружается скриптом -->
     </div>
 
     <script>
-        vkBridge.send('VKWebAppInit');
+        try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
-        // Массив с вопросами (обновленные типы)
         const questions = [
             { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "slider", min: 1, max: 10, default: 10 },
             { id: "q2", text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
@@ -254,9 +305,17 @@
 
         let currentStep = -1;
         let userAnswers = {};
-        let tempChoice = ""; // Для временного хранения выбора кнопки
+        let tempChoice = ""; 
 
         const container = document.getElementById('main-container');
+
+        // Функция разбивает текст на слова для плавной анимации
+        function generateAnimatedText(text) {
+            return text.split(' ').map((word, index) => {
+                let delay = index * 0.05; // Задержка для каждого слова
+                return `<span class="word-reveal" style="animation-delay: ${delay}s">${word}</span>`;
+            }).join(' ');
+        }
 
         function renderStep() {
             container.classList.remove('fade-in');
@@ -266,40 +325,43 @@
                 let html = '';
 
                 if (currentStep === -1) {
+                    // Стартовый экран
+                    const rawText = "Здарова! Мы тут решили набрать какое-то количество людей в актёрский состав, чтобы у нас было больше свободы фантазии, если ты хочешь двигаться с нами, то нам нужно о тебе немного узнать, для этого тебе нужно заполнить анкету.";
+                    const animatedHtml = generateAnimatedText(rawText);
+
                     html = `
-                        <div class="text-content">
-                            Здарова! Мы тут решили набрать какое-то количество людей в актёрский состав, чтобы у нас было больше свободы фантазии, если ты хочешь двигаться с нами, то нам нужно о тебе немного узнать, для этого тебе нужно заполнить анкету.
+                        <div class="text-content" style="min-height: 120px;">
+                            ${animatedHtml}
                         </div>
-                        <button class="btn" style="width: 100%;" onclick="nextStep()">Заполнить анкету</button>
+                        <button class="btn" style="width: 100%;" id="startBtn">Заполнить анкету</button>
                     `;
                 } else if (currentStep < questions.length) {
+                    // Вопросы
                     const q = questions[currentStep];
                     let inputHtml = '';
                     let isNextDisabled = true;
-                    
-                    // Восстанавливаем прошлый ответ, если он есть
                     const savedVal = userAnswers[q.id] || "";
 
                     if (q.type === 'text') {
-                        inputHtml = `<input type="text" id="answerInput" placeholder="${q.placeholder}" value="${savedVal}" oninput="checkInput()">`;
+                        inputHtml = `<input type="text" id="answerInput" placeholder="${q.placeholder}" value="${savedVal}">`;
                         isNextDisabled = !savedVal;
                     } else if (q.type === 'textarea') {
-                        inputHtml = `<textarea id="answerInput" rows="3" placeholder="${q.placeholder}" oninput="checkInput()">${savedVal}</textarea>`;
+                        inputHtml = `<textarea id="answerInput" rows="4" placeholder="${q.placeholder}">${savedVal}</textarea>`;
                         isNextDisabled = !savedVal;
                     } else if (q.type === 'slider') {
                         const currentVal = savedVal || q.default;
                         inputHtml = `
                             <div class="slider-value" id="sliderVal">${currentVal}</div>
-                            <input type="range" id="answerInput" min="${q.min}" max="${q.max}" value="${currentVal}" oninput="updateSlider(this.value)">
+                            <input type="range" id="answerInput" min="${q.min}" max="${q.max}" value="${currentVal}">
                         `;
-                        isNextDisabled = false; // Ползунок всегда имеет значение
+                        isNextDisabled = false; 
                     } else if (q.type === 'words') {
                         const words = savedVal ? savedVal.split(", ") : ["", "", ""];
                         inputHtml = `
                             <div class="words-grid">
-                                <input type="text" id="w1" placeholder="Слово 1" value="${words[0] || ''}" oninput="checkWords()">
-                                <input type="text" id="w2" placeholder="Слово 2" value="${words[1] || ''}" oninput="checkWords()">
-                                <input type="text" id="w3" placeholder="Слово 3" value="${words[2] || ''}" oninput="checkWords()">
+                                <input type="text" id="w1" placeholder="Слово 1" value="${words[0] || ''}">
+                                <input type="text" id="w2" placeholder="Слово 2" value="${words[1] || ''}">
+                                <input type="text" id="w3" placeholder="Слово 3" value="${words[2] || ''}">
                             </div>
                         `;
                         isNextDisabled = !(words[0] && words[1] && words[2]);
@@ -307,8 +369,8 @@
                         tempChoice = savedVal;
                         inputHtml = `
                             <div class="choice-grid">
-                                <button class="choice-btn ${tempChoice === 'Да' ? 'active' : ''}" onclick="selectChoice('Да', this)">Да</button>
-                                <button class="choice-btn ${tempChoice === 'Нет' ? 'active' : ''}" onclick="selectChoice('Нет', this)">Нет</button>
+                                <button class="choice-btn ${tempChoice === 'Да' ? 'active' : ''}" data-val="Да">Да</button>
+                                <button class="choice-btn ${tempChoice === 'Нет' ? 'active' : ''}" data-val="Нет">Нет</button>
                             </div>
                         `;
                         isNextDisabled = !tempChoice;
@@ -320,89 +382,104 @@
                         <div class="text-content">${q.text}</div>
                         ${inputHtml}
                         <div class="nav-buttons">
-                            <button class="btn btn-back" onclick="prevStep()">Назад</button>
-                            <button class="btn" id="nextBtn" onclick="saveAnswerAndNext()" ${isNextDisabled ? 'disabled' : ''}>${btnText}</button>
+                            <button class="btn btn-back" id="backBtn">Назад</button>
+                            <button class="btn" id="nextBtn" ${isNextDisabled ? 'disabled' : ''}>${btnText}</button>
                         </div>
                     `;
                 } else {
+                    // Финал
+                    const finalText = "Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.";
                     html = `
                         <div class="text-content" style="margin-bottom: 0;">
-                            Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.
+                            ${generateAnimatedText(finalText)}
                         </div>
                     `;
-                    console.log("Данные для бота:", userAnswers);
+                    console.log("Данные готовы к отправке:", userAnswers);
                 }
 
                 container.innerHTML = html;
                 container.classList.remove('fade-out');
                 container.classList.add('fade-in');
+
+                attachEventListeners(q);
+
             }, 300);
         }
 
-        // Обновление цифры над ползунком
-        function updateSlider(val) {
-            document.getElementById('sliderVal').innerText = val;
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        // Проверка для обычного текста
-        function checkInput() {
-            const val = document.getElementById('answerInput').value.trim();
-            document.getElementById('nextBtn').disabled = val.length === 0;
-        }
-
-        // Проверка для трех слов (не разрешаем пробелы, чтобы было ровно одно слово)
-        function checkWords() {
-            const w1 = document.getElementById('w1').value.trim();
-            const w2 = document.getElementById('w2').value.trim();
-            const w3 = document.getElementById('w3').value.trim();
-            
-            // Если в поле ввели пробел, стираем его (чтобы было только 1 слово)
-            if(w1.includes(' ')) document.getElementById('w1').value = w1.replace(/\s/g, '');
-            if(w2.includes(' ')) document.getElementById('w2').value = w2.replace(/\s/g, '');
-            if(w3.includes(' ')) document.getElementById('w3').value = w3.replace(/\s/g, '');
-
-            document.getElementById('nextBtn').disabled = !(w1 && w2 && w3);
-        }
-
-        // Выбор кнопки Да/Нет
-        function selectChoice(val, btnElement) {
-            tempChoice = val;
-            
-            // Убираем подсветку со всех кнопок
-            const buttons = document.querySelectorAll('.choice-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // Добавляем подсветку на нажатую
-            btnElement.classList.add('active');
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        function saveAnswerAndNext() {
-            const q = questions[currentStep];
-            
-            if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
-                userAnswers[q.id] = document.getElementById('answerInput').value.trim();
-            } else if (q.type === 'words') {
-                const w1 = document.getElementById('w1').value.trim();
-                const w2 = document.getElementById('w2').value.trim();
-                const w3 = document.getElementById('w3').value.trim();
-                userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
-            } else if (q.type === 'choice') {
-                userAnswers[q.id] = tempChoice;
+        // Привязываем события через JS, чтобы избежать любых багов с onclick в HTML
+        function attachEventListeners(q) {
+            // Кнопка Старт
+            const startBtn = document.getElementById('startBtn');
+            if (startBtn) {
+                startBtn.addEventListener('click', () => { currentStep++; renderStep(); });
             }
 
-            currentStep++;
-            renderStep();
-        }
+            // Кнопка Назад
+            const backBtn = document.getElementById('backBtn');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => { currentStep--; renderStep(); });
+            }
 
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                renderStep();
-            } else {
-                currentStep = -1; // Вернуться на стартовый экран
-                renderStep();
+            // Кнопка Далее / Отправить
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    // Сохраняем ответ перед переходом
+                    if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
+                        userAnswers[q.id] = document.getElementById('answerInput').value.trim();
+                    } else if (q.type === 'words') {
+                        const w1 = document.getElementById('w1').value.trim();
+                        const w2 = document.getElementById('w2').value.trim();
+                        const w3 = document.getElementById('w3').value.trim();
+                        userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
+                    } else if (q.type === 'choice') {
+                        userAnswers[q.id] = tempChoice;
+                    }
+                    currentStep++;
+                    renderStep();
+                });
+            }
+
+            // Логика проверки ввода (чтобы кнопка "Далее" становилась активной)
+            if (q) {
+                if (q.type === 'text' || q.type === 'textarea') {
+                    const input = document.getElementById('answerInput');
+                    input.addEventListener('input', () => {
+                        nextBtn.disabled = input.value.trim().length === 0;
+                    });
+                } 
+                else if (q.type === 'slider') {
+                    const input = document.getElementById('answerInput');
+                    const valDisplay = document.getElementById('sliderVal');
+                    input.addEventListener('input', (e) => {
+                        valDisplay.innerText = e.target.value;
+                    });
+                }
+                else if (q.type === 'words') {
+                    const w1 = document.getElementById('w1');
+                    const w2 = document.getElementById('w2');
+                    const w3 = document.getElementById('w3');
+                    const checkWords = () => {
+                        if(w1.value.includes(' ')) w1.value = w1.value.replace(/\s/g, '');
+                        if(w2.value.includes(' ')) w2.value = w2.value.replace(/\s/g, '');
+                        if(w3.value.includes(' ')) w3.value = w3.value.replace(/\s/g, '');
+                        nextBtn.disabled = !(w1.value.trim() && w2.value.trim() && w3.value.trim());
+                    };
+                    w1.addEventListener('input', checkWords);
+                    w2.addEventListener('input', checkWords);
+                    w3.addEventListener('input', checkWords);
+                }
+                else if (q.type === 'choice') {
+                    const btns = document.querySelectorAll('.choice-btn');
+                    btns.forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            btns.forEach(b => b.classList.remove('active'));
+                            e.target.classList.add('active');
+                            tempChoice = e.target.getAttribute('data-val');
+                            nextBtn.disabled = false;
+                        });
+                    });
+                }
             }
         }
 
