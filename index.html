@@ -16,65 +16,70 @@
             src: url('ofont.ru_Lemon.ttf') format('truetype');
         }
 
-        /* Общие стили и фон с глубиной */
+        /* Общие стили и черный фон */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, #222222 0%, #050505 100%);
+            background: #000000;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Центрируем всё по вертикали */
             overflow-x: hidden;
         }
 
         /* Логотип */
         .header {
             font-family: 'MarkerFat', sans-serif;
-            font-size: 3rem;
+            font-size: 3.5rem;
             letter-spacing: 2px;
-            margin-top: 40px;
+            margin-bottom: 30px;
             text-align: center;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
             z-index: 2;
         }
 
-        /* Центральный контейнер (эффект матового стекла) */
+        /* Центральная плашка */
         .container {
             width: 90%;
             max-width: 500px;
-            margin: 30px auto;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 30px;
+            background: #0a0a0a;
+            border: 1px solid #222222;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             text-align: center;
-            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             z-index: 2;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        /* Тексты */
+        /* Подсветка плашки при наведении */
+        .container:hover {
+            border-color: #444444;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
         .text-content {
             font-size: 1.1rem;
             line-height: 1.6;
             margin-bottom: 25px;
+            color: #eeeeee;
         }
 
-        /* Поля ввода */
+        /* Поля ввода (Текст) */
         input[type="text"], textarea {
             width: 100%;
             box-sizing: border-box;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #111111;
+            border: 1px solid #333333;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
             font-size: 1rem;
@@ -82,81 +87,143 @@
             border-radius: 10px;
             margin-bottom: 20px;
             outline: none;
-            transition: border 0.3s ease;
+            transition: border 0.3s ease, background 0.3s ease;
             resize: none;
         }
 
         input[type="text"]:focus, textarea:focus {
-            border: 1px solid #ffffff;
+            border-color: #ffffff;
+            background: #1a1a1a;
         }
 
-        /* Кастомные радио-кнопки (Да/Нет) */
-        .radio-group {
+        /* Три слова в ряд */
+        .words-grid {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            gap: 10px;
             margin-bottom: 20px;
         }
-        
-        .radio-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            font-size: 1.1rem;
+        .words-grid input {
+            margin-bottom: 0;
+            text-align: center;
         }
 
-        .radio-label input {
-            margin-right: 10px;
-            accent-color: #ffffff;
+        /* Ползунки (Range) */
+        .slider-value {
+            font-size: 2rem;
+            font-family: 'MarkerFat', sans-serif;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: #222222;
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+            margin-bottom: 30px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            transition: transform 0.2s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.2);
         }
 
-        /* Кнопки */
+        /* Кнопки выбора Да/Нет */
+        .choice-grid {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .choice-btn {
+            flex: 1;
+            padding: 15px;
+            background: #111111;
+            border: 1px solid #333333;
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Lemon', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover { background: #222222; }
+        .choice-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* Навигационные кнопки (Далее / Назад) */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         .btn {
+            flex: 2;
             background: #ffffff;
             color: #000000;
             border: none;
-            padding: 15px 30px;
+            padding: 15px 20px;
             font-family: 'Lemon', sans-serif;
             font-size: 1rem;
-            border-radius: 30px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
             font-weight: bold;
         }
 
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             background: #cccccc;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
         }
 
         .btn:disabled {
-            background: #555555;
-            color: #888888;
+            background: #333333;
+            color: #666666;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        }
+
+        .btn-back {
+            flex: 1;
+            background: transparent;
+            color: #888888;
+            border: 1px solid #333333;
+        }
+        
+        .btn-back:hover {
+            background: #222222;
+            color: #ffffff;
+            border-color: #666666;
         }
 
         /* Анимации */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out forwards;
-        }
-
-        .fade-out {
-            animation: fadeOut 0.3s ease-in-out forwards;
-        }
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
+        .fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
         }
     </style>
 </head>
@@ -165,32 +232,32 @@
     <div class="header">NAVERNO</div>
 
     <div class="container" id="main-container">
-        <!-- Сюда будет динамически подгружаться контент -->
+        <!-- Контент -->
     </div>
 
     <script>
         vkBridge.send('VKWebAppInit');
 
-        // Массив с вопросами (задел на будущее для бота)
+        // Массив с вопросами (обновленные типы)
         const questions = [
-            { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "text", placeholder: "Например: 10/10" },
+            { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "slider", min: 1, max: 10, default: 10 },
             { id: "q2", text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
             { id: "q3", text: "Ого, а почему вообще захотел стать частью нашей студии?", type: "textarea", placeholder: "Твой ответ..." },
-            { id: "q4", text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", type: "text", placeholder: "Напиши год" },
-            { id: "q5", text: "А какой лвл у тебя?", type: "text", placeholder: "Твой уровень" },
-            { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "text", placeholder: "Слово 1, Слово 2, Слово 3" },
+            { id: "q4", text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", type: "slider", min: 2016, max: 2026, default: 2020 },
+            { id: "q5", text: "А какой лвл у тебя?", type: "slider", min: 1, max: 100, default: 10 },
+            { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "words" },
             { id: "q7", text: "Вероятно нам для съёмок понадобится взаимодействие с тобой в дискорде, не будет такого что ты будешь нас перебивать и так далее?", type: "textarea", placeholder: "Твой ответ..." },
-            { id: "q8", text: "Эти слова про тебя? - могу предложить в идее что-то изменить, улучшить и при этом не постесняюсь", type: "radio" },
+            { id: "q8", text: "Эти слова про тебя? - могу предложить в идее что-то изменить, улучшить и при этом не постесняюсь", type: "choice" },
             { id: "q9", text: "В какие дни ты обычно свободен?", type: "text", placeholder: "Например: Пн, Ср, Пт" },
             { id: "q10", text: "И по времени хотелось бы понимать, какой диапазон (с какого времени до какого)", type: "text", placeholder: "Например: с 18:00 до 22:00" }
         ];
 
-        let currentStep = -1; // -1: Приветствие, 0-9: Вопросы, 10: Финал
-        let userAnswers = {}; // Сюда мы собираем ответы для бота
+        let currentStep = -1;
+        let userAnswers = {};
+        let tempChoice = ""; // Для временного хранения выбора кнопки
 
         const container = document.getElementById('main-container');
 
-        // Функция отрисовки интерфейса с анимацией
         function renderStep() {
             container.classList.remove('fade-in');
             container.classList.add('fade-out');
@@ -199,92 +266,146 @@
                 let html = '';
 
                 if (currentStep === -1) {
-                    // Стартовый экран
                     html = `
                         <div class="text-content">
                             Здарова! Мы тут решили набрать какое-то количество людей в актёрский состав, чтобы у нас было больше свободы фантазии, если ты хочешь двигаться с нами, то нам нужно о тебе немного узнать, для этого тебе нужно заполнить анкету.
                         </div>
-                        <button class="btn" onclick="nextStep()">Заполнить анкету</button>
+                        <button class="btn" style="width: 100%;" onclick="nextStep()">Заполнить анкету</button>
                     `;
                 } else if (currentStep < questions.length) {
-                    // Экран вопроса
                     const q = questions[currentStep];
                     let inputHtml = '';
+                    let isNextDisabled = true;
                     
+                    // Восстанавливаем прошлый ответ, если он есть
+                    const savedVal = userAnswers[q.id] || "";
+
                     if (q.type === 'text') {
-                        inputHtml = `<input type="text" id="answerInput" placeholder="${q.placeholder}" oninput="checkInput()">`;
+                        inputHtml = `<input type="text" id="answerInput" placeholder="${q.placeholder}" value="${savedVal}" oninput="checkInput()">`;
+                        isNextDisabled = !savedVal;
                     } else if (q.type === 'textarea') {
-                        inputHtml = `<textarea id="answerInput" rows="3" placeholder="${q.placeholder}" oninput="checkInput()"></textarea>`;
-                    } else if (q.type === 'radio') {
+                        inputHtml = `<textarea id="answerInput" rows="3" placeholder="${q.placeholder}" oninput="checkInput()">${savedVal}</textarea>`;
+                        isNextDisabled = !savedVal;
+                    } else if (q.type === 'slider') {
+                        const currentVal = savedVal || q.default;
                         inputHtml = `
-                            <div class="radio-group">
-                                <label class="radio-label"><input type="radio" name="r_answer" value="Да" onchange="checkInput()"> Да</label>
-                                <label class="radio-label"><input type="radio" name="r_answer" value="Нет" onchange="checkInput()"> Нет</label>
+                            <div class="slider-value" id="sliderVal">${currentVal}</div>
+                            <input type="range" id="answerInput" min="${q.min}" max="${q.max}" value="${currentVal}" oninput="updateSlider(this.value)">
+                        `;
+                        isNextDisabled = false; // Ползунок всегда имеет значение
+                    } else if (q.type === 'words') {
+                        const words = savedVal ? savedVal.split(", ") : ["", "", ""];
+                        inputHtml = `
+                            <div class="words-grid">
+                                <input type="text" id="w1" placeholder="Слово 1" value="${words[0] || ''}" oninput="checkWords()">
+                                <input type="text" id="w2" placeholder="Слово 2" value="${words[1] || ''}" oninput="checkWords()">
+                                <input type="text" id="w3" placeholder="Слово 3" value="${words[2] || ''}" oninput="checkWords()">
                             </div>
                         `;
+                        isNextDisabled = !(words[0] && words[1] && words[2]);
+                    } else if (q.type === 'choice') {
+                        tempChoice = savedVal;
+                        inputHtml = `
+                            <div class="choice-grid">
+                                <button class="choice-btn ${tempChoice === 'Да' ? 'active' : ''}" onclick="selectChoice('Да', this)">Да</button>
+                                <button class="choice-btn ${tempChoice === 'Нет' ? 'active' : ''}" onclick="selectChoice('Нет', this)">Нет</button>
+                            </div>
+                        `;
+                        isNextDisabled = !tempChoice;
                     }
 
-                    // Если это последний вопрос, меняем текст кнопки
-                    const btnText = (currentStep === questions.length - 1) ? "Отправить анкету на рассмотрение" : "Далее";
+                    const btnText = (currentStep === questions.length - 1) ? "Отправить" : "Далее";
 
                     html = `
                         <div class="text-content">${q.text}</div>
                         ${inputHtml}
-                        <button class="btn" id="nextBtn" onclick="saveAnswerAndNext()" disabled>${btnText}</button>
+                        <div class="nav-buttons">
+                            <button class="btn btn-back" onclick="prevStep()">Назад</button>
+                            <button class="btn" id="nextBtn" onclick="saveAnswerAndNext()" ${isNextDisabled ? 'disabled' : ''}>${btnText}</button>
+                        </div>
                     `;
                 } else {
-                    // Финальный экран
                     html = `
-                        <div class="text-content">
+                        <div class="text-content" style="margin-bottom: 0;">
                             Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.
                         </div>
                     `;
-                    
-                    // ЗДЕСЬ ПОЗЖЕ БУДЕТ КОД ОТПРАВКИ В БОТА
-                    console.log("Собранные данные для отправки:", userAnswers);
+                    console.log("Данные для бота:", userAnswers);
                 }
 
                 container.innerHTML = html;
                 container.classList.remove('fade-out');
                 container.classList.add('fade-in');
-            }, 300); // Ждем завершения анимации затухания
+            }, 300);
         }
 
-        // Проверка: кнопка "Далее" не активна, пока человек ничего не написал
+        // Обновление цифры над ползунком
+        function updateSlider(val) {
+            document.getElementById('sliderVal').innerText = val;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        // Проверка для обычного текста
         function checkInput() {
-            const btn = document.getElementById('nextBtn');
-            const q = questions[currentStep];
-            
-            if (q.type === 'radio') {
-                const checked = document.querySelector('input[name="r_answer"]:checked');
-                btn.disabled = !checked;
-            } else {
-                const val = document.getElementById('answerInput').value.trim();
-                btn.disabled = val.length === 0;
-            }
+            const val = document.getElementById('answerInput').value.trim();
+            document.getElementById('nextBtn').disabled = val.length === 0;
         }
 
-        // Сохранение ответа и переход
+        // Проверка для трех слов (не разрешаем пробелы, чтобы было ровно одно слово)
+        function checkWords() {
+            const w1 = document.getElementById('w1').value.trim();
+            const w2 = document.getElementById('w2').value.trim();
+            const w3 = document.getElementById('w3').value.trim();
+            
+            // Если в поле ввели пробел, стираем его (чтобы было только 1 слово)
+            if(w1.includes(' ')) document.getElementById('w1').value = w1.replace(/\s/g, '');
+            if(w2.includes(' ')) document.getElementById('w2').value = w2.replace(/\s/g, '');
+            if(w3.includes(' ')) document.getElementById('w3').value = w3.replace(/\s/g, '');
+
+            document.getElementById('nextBtn').disabled = !(w1 && w2 && w3);
+        }
+
+        // Выбор кнопки Да/Нет
+        function selectChoice(val, btnElement) {
+            tempChoice = val;
+            
+            // Убираем подсветку со всех кнопок
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Добавляем подсветку на нажатую
+            btnElement.classList.add('active');
+            document.getElementById('nextBtn').disabled = false;
+        }
+
         function saveAnswerAndNext() {
             const q = questions[currentStep];
-            let val = '';
             
-            if (q.type === 'radio') {
-                val = document.querySelector('input[name="r_answer"]:checked').value;
-            } else {
-                val = document.getElementById('answerInput').value.trim();
+            if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
+                userAnswers[q.id] = document.getElementById('answerInput').value.trim();
+            } else if (q.type === 'words') {
+                const w1 = document.getElementById('w1').value.trim();
+                const w2 = document.getElementById('w2').value.trim();
+                const w3 = document.getElementById('w3').value.trim();
+                userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
+            } else if (q.type === 'choice') {
+                userAnswers[q.id] = tempChoice;
             }
 
-            userAnswers[q.id] = val; // Сохраняем в память
-            nextStep();
-        }
-
-        function nextStep() {
             currentStep++;
             renderStep();
         }
 
-        // Запуск при открытии
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            } else {
+                currentStep = -1; // Вернуться на стартовый экран
+                renderStep();
+            }
+        }
+
         renderStep();
     </script>
 </body>
