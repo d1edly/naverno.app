@@ -53,7 +53,7 @@
         }
 
         /* ==========================================================================
-           2. ЗАДНИЙ ФОН (АБСТРАКТНОЕ СВЕЧЕНИЕ)
+           2. ЗАДНИЙ ФОН И АНИМАЦИИ
            ========================================================================== */
         .ambient-light {
             position: absolute;
@@ -65,6 +65,36 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             pointer-events: none;
+        }
+
+        /* Динамика: Плавное парение контейнера */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Динамика: Спиннер загрузки */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* Динамика: Пульсация главной кнопки */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
 
         /* ==========================================================================
@@ -98,6 +128,12 @@
             transition: var(--transition);
             box-sizing: border-box;
             position: relative;
+            animation: float 6s ease-in-out infinite; /* Применяем парение */
+        }
+
+        /* Отключаем парение во время смены экранов, чтобы не дергалось */
+        .container.fade-in, .container.fade-out {
+            animation: none; 
         }
 
         .hidden { display: none !important; }
@@ -117,7 +153,7 @@
 
         .close-btn:hover {
             color: var(--text-main);
-            transform: scale(1.1);
+            transform: scale(1.2) rotate(90deg); /* Динамика: вращение крестика */
         }
 
         /* ==========================================================================
@@ -158,12 +194,21 @@
         .social-btn:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--border-hover);
+            transform: translateY(-3px); /* Динамика: подъем кнопок соцсетей */
         }
 
         .social-btn svg {
             width: 20px;
             height: 20px;
             fill: var(--text-main);
+        }
+
+        #startHubBtn {
+            animation: pulse 2s infinite;
+        }
+
+        #startHubBtn:hover {
+            animation: none;
         }
 
         /* ==========================================================================
@@ -207,6 +252,7 @@
             border-color: var(--border-hover);
             background: rgba(255, 255, 255, 0.02);
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px); /* Динамика: поле ввода приподнимается */
         }
 
         .words-column {
@@ -255,7 +301,8 @@
         }
         
         input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
+            transform: scale(1.25);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5); /* Динамика: свечение ползунка */
         }
 
         /* ==========================================================================
@@ -286,6 +333,7 @@
         .day-btn:hover, .choice-btn:hover {
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
+            transform: translateY(-2px);
         }
         
         .day-btn.active, .choice-btn.active {
@@ -293,6 +341,7 @@
             color: #000000;
             border-color: var(--text-main);
             font-weight: 700;
+            transform: scale(1.05); /* Динамика: увеличение выбранной кнопки */
         }
 
         /* ==========================================================================
@@ -352,7 +401,10 @@
             justify-content: center;
         }
 
-        .time-arrow:hover { color: var(--text-main); }
+        .time-arrow:hover { 
+            color: var(--text-main); 
+            transform: scale(1.2);
+        }
 
         .time-val {
             font-size: 1.75rem;
@@ -394,6 +446,7 @@
         .btn:hover:not(:disabled) {
             background: var(--accent-hover);
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
         }
 
         .btn:disabled {
@@ -429,6 +482,7 @@
             color: var(--text-main);
             margin-bottom: 24px;
             opacity: 0.8;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .locked-title {
@@ -450,13 +504,13 @@
         .fade-out { animation: fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeOut {
             from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 0; transform: translateY(-15px); }
         }
     </style>
 </head>
@@ -557,6 +611,9 @@
         function renderStep() {
             if (isAlreadySubmitted) {
                 renderLockedScreen();
+                // Фикс невидимости, если пользователь обновил страницу
+                surveyContainer.classList.remove('fade-out');
+                surveyContainer.classList.add('fade-in');
                 return;
             }
 
@@ -696,10 +753,15 @@
                         </div>
                     `;
                 } else {
+                    // ЭКРАН ЗАГРУЗКИ ПЕРЕД ФИНАЛОМ
                     html = `
                         ${closeBtnHtml}
                         <div class="text-content" style="margin-bottom: 0; text-align: center;">
-                            Всё, окей, я тебя услышал. В ближайшее время с тобой свяжутся в ЛС. Спасибо, что уделил время.
+                            Обрабатываем ответы...
+                        </div>
+                        <div class="loader"></div>
+                        <div class="text-content" style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
+                            Пожалуйста, подождите
                         </div>
                     `;
                     
@@ -732,13 +794,19 @@
                             sendData(finalData);
                         });
 
+                    // ИСПРАВЛЕНИЕ БАГА С ИСЧЕЗНОВЕНИЕМ
                     setTimeout(() => {
                         surveyContainer.classList.remove('fade-in');
                         surveyContainer.classList.add('fade-out');
+                        
                         setTimeout(() => {
                             renderLockedScreen();
-                        }, 300);
-                    }, 4000);
+                            // Явно возвращаем прозрачность контейнеру!
+                            surveyContainer.classList.remove('fade-out');
+                            surveyContainer.classList.add('fade-in');
+                        }, 300); // время на затухание спиннера
+                        
+                    }, 2500); // Сократил ожидание до 2.5 секунд для лучшего UX
                 }
 
                 surveyContainer.innerHTML = html;
