@@ -243,7 +243,7 @@
             margin-bottom: 30px;
             color: var(--text-main);
             min-height: 4.5rem; 
-            text-align: center; /* Убрал display: flex, чтобы пробелы не пропадали */
+            text-align: center;
         }
 
         /* ==========================================================================
@@ -599,36 +599,53 @@
         const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
         const closeBtnHtml = `<div class="close-btn" id="closeSurveyBtn">&times;</div>`;
 
-        // Парсер для эффекта печатной машинки по каждой букве (с фиксом пробелов)
+        // Улучшенный парсер печатной машинки. Сохраняет целостность слов и их правильный перенос.
         function generateTypewriterText(htmlString) {
-            let result = '';
             let delay = 0;
-            let inTag = false;
-            let tagBuffer = '';
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlString;
 
-            for (let i = 0; i < htmlString.length; i++) {
-                let char = htmlString[i];
-                if (char === '<') {
-                    inTag = true;
-                    tagBuffer += char;
-                } else if (char === '>') {
-                    inTag = false;
-                    tagBuffer += char;
-                    result += tagBuffer;
-                    tagBuffer = '';
-                } else if (inTag) {
-                    tagBuffer += char;
-                } else {
-                    if (char === ' ') {
-                        // Важный фикс пробелов: меняем на неразрывный пробел &nbsp; внутри спана
-                        result += `<span class="letter-span" style="animation-delay: ${delay}s">&nbsp;</span>`;
-                    } else {
-                        result += `<span class="letter-span" style="animation-delay: ${delay}s">${char}</span>`;
+            function processNodes(node) {
+                let htmlResult = '';
+                const childNodes = Array.from(node.childNodes);
+
+                for (let child of childNodes) {
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        // Разбиваем текст на слова и пробелы, чтобы анимировать буквы, но переносить слова целиком
+                        const parts = child.textContent.split(/(\s+)/);
+                        
+                        for (let part of parts) {
+                            if (/\s+/.test(part)) {
+                                // Обычный пробел между словами (позволяет перенос строк)
+                                htmlResult += ' ';
+                            } else if (part.length > 0) {
+                                // Оборачиваем целое слово в неразрывный контейнер, а внутри анимируем буквы
+                                htmlResult += `<span style="white-space: nowrap;">`;
+                                for (let char of part) {
+                                    htmlResult += `<span class="letter-span" style="animation-delay: ${delay}s">${char}</span>`;
+                                    delay += 0.012; // Скорость появления букв (чуть ускорено для динамики)
+                                }
+                                htmlResult += `</span>`;
+                            }
+                        }
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        // Если тег — это перенос строки <br>, сохраняем его
+                        if (child.tagName === 'BR') {
+                            htmlResult += '<br>';
+                        } else {
+                            // Рекурсивно обрабатываем другие вложенные теги, сохраняя их свойства
+                            const outer = child.cloneNode(false);
+                            const parsedInside = processNodes(child);
+                            outer.innerHTML = parsedInside.html;
+                            htmlResult += outer.outerHTML;
+                        }
                     }
-                    delay += 0.015; 
                 }
+                return { html: htmlResult, delay };
             }
-            return { html: result, totalDurationMs: delay * 1000 };
+
+            const result = processNodes(tempDiv);
+            return { html: result.html, totalDurationMs: result.delay * 1000 };
         }
 
         function renderLockedScreen() {
