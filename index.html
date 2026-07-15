@@ -3,20 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Анкета NAVERNO</title>
+    <title>NAVERNO Hub & Анкета</title>
+    
+    <!-- Подключение официального SDK VK Bridge для мини-приложений ВКонтакте -->
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    
     <style>
-        /* Шрифты */
+        /* ==========================================================================
+           1. ШРИФТЫ И ОСНОВНЫЕ НАСТРОЙКИ СТИЛЕЙ
+           ========================================================================== */
         @font-face {
             font-family: 'MarkerFat';
             src: url('Marker Fat.otf') format('opentype');
+            /* Альтернативный фоллбэк, если файл не загрузится */
+            font-display: swap;
         }
+        
         @font-face {
             font-family: 'Lemon';
             src: url('ofont.ru_Lemon.ttf') format('truetype');
+            font-display: swap;
         }
 
-        /* Анимированный фон */
+        /* Базовые стили отображения страницы */
         body, html {
             margin: 0;
             padding: 0;
@@ -25,44 +34,66 @@
             background-color: #050505;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Запрет скролла, приложение работает как один экран */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
+            
+            /* ЗАПРЕТ ПОДСВЕТКИ И ВЫДЕЛЕНИЯ ТЕКСТА */
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Стандартный синтаксис */
+            -webkit-tap-highlight-color: transparent; /* Убирает синий квадрат при тапе на мобилках */
         }
 
+        /* ==========================================================================
+           2. ЗАДНИЙ ФОН И ДИНАМИЧЕСКИЕ БЛОБЫ (АНИМАЦИЯ)
+           ========================================================================== */
         .blob {
             position: absolute;
-            filter: blur(90px);
+            filter: blur(100px);
             z-index: 0;
-            opacity: 0.6;
-            animation: float 15s infinite ease-in-out alternate;
+            opacity: 0.5;
+            animation: float 18s infinite ease-in-out alternate;
             pointer-events: none;
         }
+        
         .blob-1 {
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
             background: #2a2a2a;
-            top: 10%;
-            left: 10%;
+            top: 5%;
+            left: 5%;
         }
+        
         .blob-2 {
-            width: 400px;
-            height: 400px;
+            width: 450px;
+            height: 450px;
             background: #151515;
-            bottom: 10%;
-            right: 10%;
-            animation-delay: -5s;
+            bottom: 5%;
+            right: 5%;
+            animation-delay: -7s;
         }
 
+        /* Плавная анимация покачивания декоративных блобов */
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, 50px) scale(1.1); }
-            100% { transform: translate(-30px, -20px) scale(0.9); }
+            0% { 
+                transform: translate(0, 0) scale(1) rotate(0deg); 
+            }
+            50% { 
+                transform: translate(40px, 60px) scale(1.15) rotate(10deg); 
+            }
+            100% { 
+                transform: translate(-40px, -30px) scale(0.9) rotate(-10deg); 
+            }
         }
 
-        /* Заголовок NAVERNO */
+        /* ==========================================================================
+           3. ОБЩИЕ ЭЛЕМЕНТЫ КОНТЕЙНЕРА (GLASSMORPHISM)
+           ========================================================================== */
         .header {
             font-family: 'MarkerFat', sans-serif;
             font-size: 3.5rem;
@@ -73,7 +104,6 @@
             z-index: 2;
         }
 
-        /* Стеклянная плашка */
         .container {
             width: 90%;
             max-width: 500px;
@@ -89,17 +119,83 @@
             flex-direction: column;
             justify-content: center;
             z-index: 2;
-            transition: all 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
+            position: relative;
         }
 
         .container:hover {
             border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
         }
 
-        /* Появление слов */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==========================================================================
+           4. СТИЛИ ХАБА (ГЛАВНЫЙ ЭКРАН)
+           ========================================================================== */
+        .hub-manifest {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #d0d0d0;
+            margin-bottom: 35px;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+
+        .social-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .social-btn svg {
+            width: 36px;
+            height: 36px;
+            margin-bottom: 10px;
+            fill: #ffffff;
+            transition: fill 0.3s ease;
+        }
+        
+        /* Цвета иконок при наведении */
+        .social-btn.tiktok:hover svg { fill: #ff0050; filter: drop-shadow(2px 2px 0px #00f2fe); }
+        .social-btn.youtube:hover svg { fill: #ff0000; }
+
+        .social-btn span {
+            font-family: 'Lemon', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================================================
+           5. АНИМАЦИЯ ПОЭЛЕМЕНТНОГО ПОЯВЛЕНИЯ ТЕКСТА (В АНКЕТЕ)
+           ========================================================================== */
         .word-reveal {
             opacity: 0;
             display: inline-block;
@@ -107,8 +203,14 @@
         }
         
         @keyframes fadeInWord {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { 
+                opacity: 0; 
+                transform: translateY(10px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
         .text-content {
@@ -118,7 +220,9 @@
             color: #e0e0e0;
         }
 
-        /* Ввод текста */
+        /* ==========================================================================
+           6. ПОЛЯ СТАНДАРТНОГО ВВОДА ДАННЫХ
+           ========================================================================== */
         input[type="text"], textarea {
             width: 100%;
             box-sizing: border-box;
@@ -133,14 +237,24 @@
             outline: none;
             transition: border 0.3s ease, background 0.3s ease;
             resize: none;
+            /* Разрешаем выделение внутри инпутов, чтобы юзер мог редактировать свой текст */
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
 
         input[type="text"]:focus, textarea:focus {
             border-color: #ffffff;
             background: rgba(20, 20, 20, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
         }
 
-        /* Вертикальная сетка для 3 слов (широкие плашки) */
+        /* ==========================================================================
+           7. РАСШИРЕННЫЕ ПОЛЯ ДЛЯ ОПИСАНИЯ СЕБЯ ТРЕМЯ СЛОВАМИ
+           ========================================================================== */
         .words-column {
             display: flex;
             flex-direction: column;
@@ -148,25 +262,28 @@
             margin-bottom: 25px;
             width: 100%;
         }
+        
         .words-column input {
             margin-bottom: 0;
             text-align: center;
         }
 
-        /* Слайдеры */
+        /* ==========================================================================
+           8. ИНТЕРАКТИВНЫЙ РЕГУЛЯТОР (СЛАЙДЕРЫ)
+           ========================================================================== */
         .slider-value {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-family: 'MarkerFat', sans-serif;
             margin-bottom: 15px;
             color: #ffffff;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
             transition: transform 0.1s ease;
         }
         
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             height: 8px;
             border-radius: 10px;
             outline: none;
@@ -175,20 +292,22 @@
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             background: #ffffff;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
             transition: transform 0.1s ease, background-color 0.2s ease; 
         }
         
         input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
+            transform: scale(1.2);
         }
 
-        /* Дни недели */
+        /* ==========================================================================
+           9. СЕТКА ДЛЯ ВЫБОРА ДОСТУПНЫХ ДНЕЙ НЕДЕЛИ
+           ========================================================================== */
         .days-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -197,10 +316,10 @@
         }
 
         .day-btn {
-            padding: 12px 5px;
+            padding: 14px 5px;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
             font-size: 0.9rem;
@@ -208,16 +327,22 @@
             transition: all 0.2s ease;
         }
 
-        .day-btn:hover { background: rgba(255, 255, 255, 0.05); }
+        .day-btn:hover { 
+            background: rgba(255, 255, 255, 0.08); 
+        }
+        
         .day-btn.active {
             background: #ffffff;
             color: #000000;
             border-color: #ffffff;
             font-weight: bold;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
         }
 
-        /* Электронные часы */
+        /* ==========================================================================
+           10. ЭЛЕКТРОННЫЕ ЧАСЫ (TIME PICKER СТИЛЬ)
+           ========================================================================== */
         .time-picker-container {
             display: flex;
             justify-content: center;
@@ -232,23 +357,25 @@
             align-items: center;
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 16px;
-            min-width: 100px;
+            padding: 15px 20px;
+            border-radius: 18px;
+            min-width: 110px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .time-block-label {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #888888;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .time-display {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .time-num-group {
@@ -260,69 +387,79 @@
         .time-arrow {
             background: none;
             border: none;
-            color: #888888;
-            font-size: 1.2rem;
+            color: #666666;
+            font-size: 1.4rem;
             cursor: pointer;
             padding: 2px 10px;
             transition: color 0.2s, transform 0.1s;
-            user-select: none;
         }
 
         .time-arrow:hover {
             color: #ffffff;
-            transform: scale(1.2);
+            transform: scale(1.3);
         }
 
         .time-val {
             font-family: 'MarkerFat', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2rem;
             width: 45px;
             text-align: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
         .time-separator {
             font-family: 'MarkerFat', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #ffffff;
-            animation: blink 1s infinite;
+            animation: blink 1.5s infinite;
         }
 
         @keyframes blink {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.2; }
         }
 
-        /* Кнопки Да/Нет */
+        /* ==========================================================================
+           11. СЕТКА КНОПОК ДА/НЕТ (ВЫБОР ОДНОГО ВАРИАНТА)
+           ========================================================================== */
         .choice-grid {
             display: flex;
             gap: 15px;
             margin-bottom: 25px;
         }
+        
         .choice-btn {
             flex: 1;
-            padding: 16px;
+            padding: 18px;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 14px;
             color: #ffffff;
             font-family: 'Lemon', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .choice-btn:hover { background: rgba(255, 255, 255, 0.05); }
+        
+        .choice-btn:hover { 
+            background: rgba(255, 255, 255, 0.08); 
+        }
+        
         .choice-btn.active {
             background: #ffffff;
             color: #000000;
             border-color: #ffffff;
             font-weight: bold;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
         }
 
-        /* Навигация */
+        /* ==========================================================================
+           12. КНОПКИ УПРАВЛЕНИЯ И НАВИГАЦИИ АНКЕТЫ
+           ========================================================================== */
         .nav-buttons {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             margin-top: 10px;
         }
 
@@ -331,20 +468,21 @@
             background: #ffffff;
             color: #000000;
             border: none;
-            padding: 16px 20px;
+            padding: 18px 20px;
             font-family: 'Lemon', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
         }
 
         .btn:hover:not(:disabled) {
             background: #e0e0e0;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
         }
 
         .btn:disabled {
@@ -360,6 +498,7 @@
             background: transparent;
             color: #aaaaaa;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none;
         }
         
         .btn-back:hover {
@@ -368,114 +507,254 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Стили для экрана блокировки (заглушки) */
+        /* ==========================================================================
+           13. ДЕКОРАТИВНЫЙ ЭКРАН БЛОКИРОВКИ ПРИ ПОВТОРНОМ ПЕРЕХОДЕ
+           ========================================================================== */
         .locked-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px 0;
         }
 
         .lock-icon-svg {
             color: #ffffff;
             filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
             animation: pulse-lock 2.5s infinite ease-in-out;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         @keyframes pulse-lock {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)); }
+            0%, 100% { 
+                transform: scale(1); 
+                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)); 
+            }
+            50% { 
+                transform: scale(1.1); 
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.8)); 
+            }
         }
 
         .locked-title {
             font-family: 'MarkerFat', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 15px;
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
         }
 
         .locked-subtitle {
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.6;
-            color: #888888;
+            color: #aaaaaa;
         }
 
-        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
-        .fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
+        /* Классы плавных анимаций переходов */
+        .fade-in { 
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        }
+        
+        .fade-out { 
+            animation: fadeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.97); }
-            to { opacity: 1; transform: scale(1); }
+            from { 
+                opacity: 0; 
+                transform: scale(0.95) translateY(10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1) translateY(0); 
+            }
         }
 
         @keyframes fadeOut {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.97); }
+            from { 
+                opacity: 1; 
+                transform: scale(1) translateY(0); 
+            }
+            to { 
+                opacity: 0; 
+                transform: scale(0.95) translateY(-10px); 
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Декоративные фоновые пятна -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
+    <!-- Общий заголовок приложения -->
     <div class="header">NAVERNO</div>
 
-    <div class="container" id="main-container"></div>
+    <!-- 
+      СЕКЦИЯ 1: ХАБ (ГЛАВНЫЙ ЭКРАН)
+      Отображается по умолчанию при входе.
+    -->
+    <div class="container fade-in" id="hub-container">
+        <div class="hub-manifest">
+            Нам надоело, что нечего смотреть по Провинции. Поэтому мы решили залететь в ТикТок, чтобы получить как таковую базу людей, кому интересно наше творчество, и кто бы захотел с нами поработать, а также медийность.<br><br>
+            Далее мы планируем залететь на Ютуб, но снимать короткометражки и так далее вдвоём — невозможно. Поэтому мы создали раздел с анкетами, может именно тебя нам не хватает!
+        </div>
+        
+        <!-- Ссылки на социальные сети -->
+        <div class="social-grid">
+            <a href="https://www.tiktok.com/@naverno.studio?_r=1&_t=ZP-97Ejx9geajf" class="social-btn tiktok" target="_blank" rel="noopener noreferrer">
+                <!-- SVG Иконка TikTok -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.01.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.22-1.15 4.39-2.91 5.76-1.74 1.35-4.14 1.83-6.28 1.25-2.19-.6-4.04-2.22-4.81-4.36-.78-2.14-.4-4.66 1.01-6.43 1.36-1.72 3.59-2.61 5.72-2.39V15c-1.39-.17-2.83.25-3.84 1.25-1.04 1.03-1.44 2.63-1.05 4.05.38 1.41 1.62 2.5 3.06 2.81 1.42.3 3.01-.06 4.07-1.05 1.04-.98 1.63-2.45 1.62-3.89-.04-6.04-.02-12.08-.02-18.15z"/>
+                </svg>
+                <span>TikTok</span>
+            </a>
+            
+            <a href="https://www.youtube.com/@NAVERNO3" class="social-btn youtube" target="_blank" rel="noopener noreferrer">
+                <!-- SVG Иконка YouTube -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                <span>YouTube</span>
+            </a>
+        </div>
+
+        <button class="btn" style="width: 100%;" id="startHubBtn">Заполнить анкету</button>
+    </div>
+
+    <!-- 
+      СЕКЦИЯ 2: АНКЕТА
+      Скрыта по умолчанию. Заполняется динамически через JavaScript.
+    -->
+    <div class="container hidden" id="survey-container"></div>
 
     <script>
-        // Инициализируем VK Bridge для связи с API ВКонтакте
-        try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
+        /* ==========================================================================
+           14. ИНИЦИАЛИЗАЦИЯ И НАСТРОЙКА VK BRIDGE SDK
+           ========================================================================== */
+        try { 
+            vkBridge.send('VKWebAppInit'); 
+        } catch(e) { 
+            console.log('VK Bridge init error', e); 
+        }
 
-        // ВОПРОСЫ
+        /* ==========================================================================
+           15. КОНФИГУРАЦИОННЫЙ МАССИВ ВОПРОСОВ АНКЕТЫ
+           ========================================================================== */
         const questions = [
-            { id: "q1", text: "Как тебе наш контент по десяти балльной системе?", type: "slider", min: 1, max: 10, default: 10 },
-            { id: "q2", text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
-            { id: "q3", text: "Ого, а почему вообще захотел стать частью нашей студии?", type: "textarea", placeholder: "Твой ответ..." },
-            { id: "q4", text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", type: "slider", min: 2016, max: 2026, default: 2020 },
-            { id: "q5", text: "А какой лвл у тебя?", type: "slider", min: 1, max: 100, default: 10 },
-            { id: "q6", text: "Как ты можешь охарактеризовать себя тремя словами?", type: "words" },
-            { id: "q7", text: "Вероятно нам для съёмок понадобится взаимодействие с тобой в дискорде, не будет такого что ты будешь нас перебивать и так далее?", type: "textarea", placeholder: "Твой ответ..." },
-            { id: "q8", text: "Эти слова про тебя? - могу предложить в идее что-то изменить, улучшить и при этом не постесняюсь", type: "choice" },
-            { id: "q9", text: "В какие дни ты обычно свободен?", type: "days" },
-            { id: "q10", text: "И по времени хотелось бы понимать, какой диапазон (с какого времени до какого)", type: "timepicker" }
+            { 
+                id: "q1", 
+                text: "Как тебе наш контент по десяти балльной системе?", 
+                type: "slider", 
+                min: 1, 
+                max: 10, 
+                default: 10 
+            },
+            { 
+                id: "q2", 
+                text: "Хм, а с какого видео ты с нами познакомился и продолжил следить?", 
+                type: "text", 
+                placeholder: "Твой ответ..." 
+            },
+            { 
+                id: "q3", 
+                text: "Ого, а почему вообще захотел стать частью нашей студии?", 
+                type: "textarea", 
+                placeholder: "Твой ответ..." 
+            },
+            { 
+                id: "q4", 
+                text: "Спасибо! А теперь к вопросам касаемо твоей кандидатуры.<br><br>С какого года играешь на провинции?", 
+                type: "slider", 
+                min: 2016, 
+                max: 2026, 
+                default: 2020 
+            },
+            { 
+                id: "q5", 
+                text: "А какой лвл у тебя?", 
+                type: "slider", 
+                min: 1, 
+                max: 100, 
+                default: 10 
+            },
+            { 
+                id: "q6", 
+                text: "Как ты можешь охарактеризовать себя тремя словами?", 
+                type: "words" 
+            },
+            { 
+                id: "q7", 
+                text: "Вероятно нам для съёмок понадобится взаимодействие с тобой в дискорде, не будет такого что ты будешь нас перебивать и так далее?", 
+                type: "textarea", 
+                placeholder: "Твой ответ..." 
+            },
+            { 
+                id: "q8", 
+                text: "Эти слова про тебя? - могу предложить в идее что-то изменить, улучшить и при этом не постесняюсь", 
+                type: "choice" 
+            },
+            { 
+                id: "q9", 
+                text: "В какие дни ты обычно свободен?", 
+                type: "days" 
+            },
+            { 
+                id: "q10", 
+                text: "И по времени хотелось бы понимать, какой диапазон (с какого времени до какого)", 
+                type: "timepicker" 
+            }
         ];
 
-        let currentStep = -1;
-        let userAnswers = {};
-        let tempChoice = ""; 
-        let selectedDays = [];
+        /* ==========================================================================
+           16. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ СОСТОЯНИЯ ПРИЛОЖЕНИЯ
+           ========================================================================== */
+        let currentStep = 0;        // Текущий шаг внутри анкеты
+        let userAnswers = {};       // Хранилище ответов пользователя
+        let tempChoice = "";        // Временная переменная для кнопок Да/Нет
+        let selectedDays = [];      // Список выбранных дней недели
 
-        // Для интерактивных часов
+        // Дефолтные значения интервала времени для кастомного таймпикера
         let timeFromHour = 18;
         let timeFromMin = 0;
         let timeToHour = 22;
         let timeToMin = 0;
 
-        const container = document.getElementById('main-container');
+        // Ссылки на DOM-элементы
+        const hubContainer = document.getElementById('hub-container');
+        const surveyContainer = document.getElementById('survey-container');
 
-        // Проверяем, проходил ли юзер анкету ранее
+        // Локальное отслеживание повторных отправлений
         const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
 
+        /* ==========================================================================
+           17. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ И АНИМАЦИЯ ПОЯВЛЕНИЯ ТЕКСТА
+           ========================================================================== */
+        /**
+         * Генерирует HTML-разметку, разделяя переданный текст по словам 
+         * и присваивая каждому слову индивидуальную задержку анимации (transition delay).
+         */
         function generateAnimatedText(text) {
             return text.split(' ').map((word, index) => {
-                let delay = index * 0.04;
+                let delay = index * 0.03; // Ускорил анимацию слов для динамики
                 return `<span class="word-reveal" style="animation-delay: ${delay}s">${word}</span>`;
             }).join(' ');
         }
 
-        // Экран красивой заглушки "Доступ закрыт" со стильным SVG-замком
+        /**
+         * Выводит красивый стилизованный экран заглушки в случае, если пользователь
+         * уже отправлял анкету.
+         */
         function renderLockedScreen() {
-            container.innerHTML = `
+            surveyContainer.innerHTML = `
                 <div class="locked-container fade-in">
-                    <svg class="lock-icon-svg" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="lock-icon-svg" xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
-                    <div class="locked-title" style="color: #ffffff; font-family: 'MarkerFat', sans-serif; font-size: 1.5rem; margin-bottom: 12px; letter-spacing: 1px;">АНКЕТА ОТПРАВЛЕНА</div>
-                    <div class="locked-subtitle" style="color: #cccccc; font-size: 1rem; line-height: 1.5; padding: 0 10px;">
+                    <div class="locked-title">АНКЕТА ОТПРАВЛЕНА</div>
+                    <div class="locked-subtitle">
                         Твои ответы уже улетели к нам. <br>
                         Мы изучим их и свяжемся в ЛС, если ты нам подойдешь.
                         <br><br>
@@ -483,32 +762,50 @@
                     </div>
                 </div>
             `;
-            container.style.background = "rgba(20, 20, 20, 0.4)";
-            container.style.border = "1px solid rgba(255, 255, 255, 0.08)";
-            container.style.backdropFilter = "blur(20px)";
+            surveyContainer.style.background = "rgba(10, 10, 10, 0.7)";
+            surveyContainer.style.border = "1px solid rgba(255, 255, 255, 0.08)";
+            surveyContainer.style.backdropFilter = "blur(25px)";
         }
 
+        /* ==========================================================================
+           18. ЛОГИКА ПЕРЕХОДА ИЗ ХАБА В АНКЕТУ
+           ========================================================================== */
+        document.getElementById('startHubBtn').addEventListener('click', () => {
+            // Плавное скрытие Хаба
+            hubContainer.classList.remove('fade-in');
+            hubContainer.classList.add('fade-out');
+
+            setTimeout(() => {
+                hubContainer.classList.add('hidden');
+                surveyContainer.classList.remove('hidden');
+                // Запускаем рендер первого шага анкеты
+                renderStep();
+            }, 400); // Ожидаем завершения анимации fade-out
+        });
+
+        /* ==========================================================================
+           19. ОСНОВНОЙ ДВИЖОК ОТРИСОВКИ ШАГОВ (RENDER STEP ENGINE)
+           ========================================================================== */
+        /**
+         * Ключевая функция, генерирующая разметку приложения в зависимости от
+         * текущей переменной шага (currentStep).
+         */
         function renderStep() {
+            // Блокировка при наличии ключа в LocalStorage
             if (isAlreadySubmitted) {
                 renderLockedScreen();
                 return;
             }
 
-            container.classList.remove('fade-in');
-            container.classList.add('fade-out');
+            // Плавное угасание старого шага
+            surveyContainer.classList.remove('fade-in');
+            surveyContainer.classList.add('fade-out');
 
             setTimeout(() => {
                 let html = '';
 
-                if (currentStep === -1) {
-                    const rawText = "Здарова! Мы тут решили набрать какое-то количество людей в актёрский состав, чтобы у нас было больше свободы фантазии, если ты хочешь двигаться с нами, то нам нужно о тебе немного узнать, для этого тебе нужно заполнить анкету.";
-                    html = `
-                        <div class="text-content" style="min-height: 120px;">
-                            ${generateAnimatedText(rawText)}
-                        </div>
-                        <button class="btn" style="width: 100%;" id="startBtn">Заполнить анкету</button>
-                    `;
-                } else if (currentStep < questions.length) {
+                if (currentStep < questions.length) {
+                    /* --- ШАГИ С ВОПРОСАМИ --- */
                     const q = questions[currentStep];
                     let inputHtml = '';
                     let isNextDisabled = true;
@@ -517,9 +814,11 @@
                     if (q.type === 'text') {
                         inputHtml = `<input type="text" id="answerInput" class="custom-input" placeholder="${q.placeholder}" value="${savedVal}">`;
                         isNextDisabled = !savedVal;
+
                     } else if (q.type === 'textarea') {
                         inputHtml = `<textarea id="answerInput" class="custom-input" rows="4" placeholder="${q.placeholder}">${savedVal}</textarea>`;
                         isNextDisabled = !savedVal;
+
                     } else if (q.type === 'slider') {
                         const currentVal = savedVal || q.default;
                         inputHtml = `
@@ -527,6 +826,7 @@
                             <input type="range" id="answerInput" class="custom-slider" min="${q.min}" max="${q.max}" value="${currentVal}">
                         `;
                         isNextDisabled = false; 
+
                     } else if (q.type === 'words') {
                         const words = savedVal ? savedVal.split(", ") : ["", "", ""];
                         inputHtml = `
@@ -537,6 +837,7 @@
                             </div>
                         `;
                         isNextDisabled = !(words[0] && words[1] && words[2]);
+
                     } else if (q.type === 'choice') {
                         tempChoice = savedVal;
                         inputHtml = `
@@ -546,6 +847,7 @@
                             </div>
                         `;
                         isNextDisabled = !tempChoice;
+
                     } else if (q.type === 'days') {
                         selectedDays = savedVal ? savedVal.split(", ") : [];
                         const daysList = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс", "Каждый день"];
@@ -556,6 +858,7 @@
 
                         inputHtml = `<div class="days-grid">${daysButtons}</div>`;
                         isNextDisabled = selectedDays.length === 0;
+
                     } else if (q.type === 'timepicker') {
                         if (savedVal) {
                             const parse = savedVal.match(/с (\d+):(\d+) до (\d+):(\d+)/);
@@ -613,28 +916,30 @@
                     const btnText = (currentStep === questions.length - 1) ? "Отправить" : "Далее";
 
                     html = `
-                        <div class="text-content">${q.text}</div>
+                        <div class="text-content">${generateAnimatedText(q.text)}</div>
                         ${inputHtml}
                         <div class="nav-buttons">
-                            <button class="btn btn-back" id="backBtn">Назад</button>
+                            <!-- Скрываем кнопку "Назад" на самом первом вопросе анкеты -->
+                            ${currentStep > 0 ? `<button class="btn btn-back" id="backBtn">Назад</button>` : ''}
                             <button class="btn" id="nextBtn" ${isNextDisabled ? 'disabled' : ''}>${btnText}</button>
                         </div>
                     `;
                 } else {
-                    // Экран успешной отправки
+                    /* --- ЭКРАН УСПЕШНОЙ ОТПРАВКИ --- */
                     const finalText = "Всё, окей, я тебя услышал, в ближайшее время с тобой свяжутся в лс, спасибо что уделил время.";
                     html = `
-                        <div class="text-content" style="margin-bottom: 0;">
+                        <div class="text-content" style="margin-bottom: 0; text-align: center;">
                             ${generateAnimatedText(finalText)}
                         </div>
                     `;
                     
-                    // Блокируем повторное заполнение локально
+                    // Блокируем повторное прохождение анкеты локально
                     localStorage.setItem('naverno_anketa_submitted', 'true');
 
-                    // --- ИНТЕГРАЦИЯ С БЭКЕНДОМ GOOGLE APPS SCRIPT ---
+                    // URL веб-приложения Google Apps Script для выгрузки ответов
                     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
 
+                    // Запрос информации о профиле через VK SDK
                     vkBridge.send('VKWebAppGetUserInfo')
                         .then(user => {
                             const finalData = {
@@ -648,13 +953,12 @@
                                 mode: 'no-cors',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(finalData)
-                            })
-                            .then(() => console.log('Данные отправлены на скрипт!'))
-                            .catch(err => console.error('Ошибка fetch отправки:', err));
+                            }).then(() => console.log('Данные успешно выгружены!'))
+                              .catch(err => console.error('Ошибка AJAX-запроса:', err));
                         })
                         .catch(err => {
-                            console.error('Ошибка получения данных VK профиля:', err);
-                            // Если не удалось получить профиль (например, тест вне приложения ВК), шлем анонимно
+                            console.error('Не удалось запросить профиль ВК:', err);
+                            // Резервная отправка
                             const finalData = {
                                 ...userAnswers,
                                 userName: "Аноним",
@@ -668,47 +972,51 @@
                             });
                         });
 
-                    // Спустя ровно 5 секунд переключаем на красивую заглушку с кастомным замком
+                    // Через 5 секунд переключаем интерфейс на экран статической блокировки
                     setTimeout(() => {
-                        container.classList.remove('fade-in');
-                        container.classList.add('fade-out');
+                        surveyContainer.classList.remove('fade-in');
+                        surveyContainer.classList.add('fade-out');
                         setTimeout(() => {
                             renderLockedScreen();
-                        }, 300);
+                        }, 400);
                     }, 5000);
                 }
 
-                container.innerHTML = html;
-                container.classList.remove('fade-out');
-                container.classList.add('fade-in');
+                surveyContainer.innerHTML = html;
+                surveyContainer.classList.remove('fade-out');
+                surveyContainer.classList.add('fade-in');
 
             }, 300);
         }
 
-        // Обработчики кликов
+        /* ==========================================================================
+           20. ДЕЛЕГИРОВАНИЕ СОБЫТИЙ: ОБРАБОТЧИКИ КЛИКОВ (CLICK LISTENERS)
+           ========================================================================== */
         document.addEventListener('click', function(e) {
-            if (e.target && e.target.id === 'startBtn') {
-                currentStep = 0;
-                renderStep();
-                return;
-            }
 
+            // Нажатие кнопки "Назад" (переход к предыдущему вопросу)
             if (e.target && e.target.id === 'backBtn') {
                 currentStep--;
                 renderStep();
                 return;
             }
 
+            // Нажатие на опцию "Да" или "Нет" (Вопрос №8)
             if (e.target && e.target.classList.contains('choice-btn')) {
                 const btns = document.querySelectorAll('.choice-btn');
                 btns.forEach(btn => btn.classList.remove('active'));
+                
                 e.target.classList.add('active');
                 tempChoice = e.target.getAttribute('data-val');
+                
                 const nextBtn = document.getElementById('nextBtn');
-                if (nextBtn) nextBtn.disabled = false;
+                if (nextBtn) {
+                    nextBtn.disabled = false;
+                }
                 return;
             }
 
+            // Логика выбора свободных дней недели (Вопрос №9)
             if (e.target && e.target.classList.contains('day-btn')) {
                 const day = e.target.getAttribute('data-day');
                 
@@ -739,10 +1047,13 @@
                 });
 
                 const nextBtn = document.getElementById('nextBtn');
-                if (nextBtn) nextBtn.disabled = selectedDays.length === 0;
+                if (nextBtn) {
+                    nextBtn.disabled = selectedDays.length === 0;
+                }
                 return;
             }
 
+            // Изменение значений времени на интерактивных часах (Вопрос №10)
             if (e.target && e.target.classList.contains('time-arrow')) {
                 const action = e.target.getAttribute('data-action');
                 const target = e.target.getAttribute('data-target');
@@ -763,9 +1074,11 @@
                 return;
             }
 
+            // Нажатие на кнопку "Далее" / "Отправить"
             if (e.target && e.target.id === 'nextBtn') {
                 const q = questions[currentStep];
                 
+                // Сбор и сохранение введенных данных по типам полей
                 if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
                     userAnswers[q.id] = document.getElementById('answerInput').value.trim();
                 } else if (q.type === 'words') {
@@ -791,43 +1104,59 @@
             }
         });
 
-        // Отслеживание ввода
+        /* ==========================================================================
+           21. ДЕЛЕГИРОВАНИЕ СОБЫТИЙ: ДИНАМИЧЕСКОЕ ОТСЛЕЖИВАНИЕ ВВОДА (INPUT LISTENERS)
+           ========================================================================== */
         document.addEventListener('input', function(e) {
+            // Проверка на наличие текущего вопроса
             if (!questions[currentStep]) return;
             const q = questions[currentStep];
             const nextBtn = document.getElementById('nextBtn');
 
             if (!nextBtn) return;
 
+            // Валидация заполнения стандартного текстового поля
             if (e.target && e.target.classList.contains('custom-input')) {
                 nextBtn.disabled = e.target.value.trim().length === 0;
             }
 
+            // Интерактивный отклик изменения слайдеров
             if (e.target && e.target.classList.contains('custom-slider')) {
                 const valDisplay = document.getElementById('sliderVal');
                 if (valDisplay) {
                     valDisplay.innerText = e.target.value;
-                    valDisplay.style.transform = 'scale(1.15)';
-                    setTimeout(() => valDisplay.style.transform = 'scale(1)', 100);
+                    // Микро-анимация пульсации цифры при перетаскивании ползунка
+                    valDisplay.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        valDisplay.style.transform = 'scale(1)';
+                    }, 150);
                 }
             }
 
+            // Валидация полей ввода "Охарактеризуй себя тремя словами"
             if (e.target && e.target.classList.contains('word-input')) {
                 const w1 = document.getElementById('w1');
                 const w2 = document.getElementById('w2');
                 const w3 = document.getElementById('w3');
 
                 if (w1 && w2 && w3) {
-                    if (w1.value.includes(' ')) w1.value = w1.value.replace(/\s/g, '');
-                    if (w2.value.includes(' ')) w2.value = w2.value.replace(/\s/g, '');
-                    if (w3.value.includes(' ')) w3.value = w3.value.replace(/\s/g, '');
+                    // Автоматическое удаление пробелов внутри полей (одно поле = одно слово)
+                    if (w1.value.includes(' ')) {
+                        w1.value = w1.value.replace(/\s/g, '');
+                    }
+                    if (w2.value.includes(' ')) {
+                        w2.value = w2.value.replace(/\s/g, '');
+                    }
+                    if (w3.value.includes(' ')) {
+                        w3.value = w3.value.replace(/\s/g, '');
+                    }
 
+                    // Кнопка "Далее" разблокируется только при заполнении всех 3 полей
                     nextBtn.disabled = !(w1.value.trim() && w2.value.trim() && w3.value.trim());
                 }
             }
         });
 
-        renderStep();
     </script>
 </body>
 </html>
