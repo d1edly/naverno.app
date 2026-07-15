@@ -243,10 +243,7 @@
             margin-bottom: 30px;
             color: var(--text-main);
             min-height: 4.5rem; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
+            text-align: center; /* Убрал display: flex, чтобы пробелы не пропадали */
         }
 
         /* ==========================================================================
@@ -602,7 +599,7 @@
         const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
         const closeBtnHtml = `<div class="close-btn" id="closeSurveyBtn">&times;</div>`;
 
-        // Парсер для эффекта печатной машинки по каждой букве
+        // Парсер для эффекта печатной машинки по каждой букве (с фиксом пробелов)
         function generateTypewriterText(htmlString) {
             let result = '';
             let delay = 0;
@@ -623,15 +620,14 @@
                     tagBuffer += char;
                 } else {
                     if (char === ' ') {
-                        result += ' ';
+                        // Важный фикс пробелов: меняем на неразрывный пробел &nbsp; внутри спана
+                        result += `<span class="letter-span" style="animation-delay: ${delay}s">&nbsp;</span>`;
                     } else {
-                        // Каждая буква получает свою задержку анимации (15 мс на букву)
                         result += `<span class="letter-span" style="animation-delay: ${delay}s">${char}</span>`;
-                        delay += 0.015; 
                     }
+                    delay += 0.015; 
                 }
             }
-            // Возвращаем HTML и общее время анимации, чтобы инпуты появились вовремя
             return { html: result, totalDurationMs: delay * 1000 };
         }
 
@@ -661,7 +657,7 @@
                 hubContainer.classList.add('hidden');
                 surveyContainer.classList.remove('hidden');
                 renderStep();
-            }, 400); // 400ms - время исчезновения hub'а
+            }, 400); 
         });
 
         function renderStep() {
@@ -798,10 +794,8 @@
 
                     const btnText = (currentStep === questions.length - 1) ? "Отправить" : "Далее";
                     
-                    // Вычисляем анимацию текста
                     const typewriter = generateTypewriterText(q.text);
 
-                    // Оборачиваем инпуты в скрытый блок, который появится после анимации текста
                     html = `
                         ${closeBtnHtml}
                         <div class="text-content">${typewriter.html}</div>
@@ -871,7 +865,6 @@
                 surveyContainer.classList.remove('fade-out');
                 surveyContainer.classList.add('fade-in');
 
-                // Плавно показываем поля ввода после того, как текст "допечатался"
                 if (currentStep < questions.length) {
                     const typewriter = generateTypewriterText(questions[currentStep].text);
                     setTimeout(() => {
