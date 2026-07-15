@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAVERNO Hub & Анкета</title>
     
-    <!-- Подключение официального SDK VK Bridge для мини-приложений ВКонтакте -->
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     
     <style>
@@ -560,10 +559,8 @@
 
     <div class="header">NAVERNO</div>
 
-    <!-- СЕКЦИЯ 1: ХАБ -->
     <div class="container fade-in" id="hub-container">
         
-        <!-- Социальные сети теперь сверху, сразу под заголовком -->
         <div class="social-grid">
             <a href="https://www.tiktok.com/@naverno.studio?_r=1&_t=ZP-97Ejx9geajf" class="social-btn tiktok" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -586,7 +583,6 @@
         <button class="btn" style="width: 100%;" id="startHubBtn">Заполнить анкету</button>
     </div>
 
-    <!-- СЕКЦИЯ 2: АНКЕТА -->
     <div class="container hidden" id="survey-container"></div>
 
     <script>
@@ -809,6 +805,17 @@
 
                     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
 
+                    // Функция для чистой отправки данных без CORS-костылей
+                    function sendData(finalData) {
+                        fetch(scriptUrl, { 
+                            method: 'POST', 
+                            headers: { 'Content-Type': 'application/json' }, 
+                            body: JSON.stringify(finalData) 
+                        })
+                        .then(res => console.log("Данные успешно отправлены в Google Script!"))
+                        .catch(err => console.error("Ошибка при отправке в Google Script:", err));
+                    }
+
                     vkBridge.send('VKWebAppGetUserInfo')
                         .then(user => {
                             const finalData = {
@@ -816,11 +823,11 @@
                                 userName: user.first_name + " " + user.last_name,
                                 userId: user.id
                             };
-                            fetch(scriptUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(finalData) });
+                            sendData(finalData);
                         })
                         .catch(err => {
                             const finalData = { ...userAnswers, userName: "Аноним", userId: 0 };
-                            fetch(scriptUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(finalData) });
+                            sendData(finalData);
                         });
 
                     setTimeout(() => {
