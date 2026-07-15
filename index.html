@@ -800,16 +800,17 @@
 
                     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
 
-                    // Функция для отправки данных (ИСПРАВЛЕНО ДЛЯ ОБХОДА CORS-ОГРАНИЧЕНИЙ)
+                    // Единственный надежный способ отправить POST в Google Script из веб-приложения:
+                    // 1) no-cors предотвращает падение на Google-редиректах
+                    // 2) text/plain;charset=utf-8 — разрешенный "простой" формат для no-cors режима
                     function sendData(finalData) {
                         fetch(scriptUrl, { 
                             method: 'POST', 
-                            // Указываем text/plain вместо application/json, чтобы превратить запрос в Simple Request
+                            mode: 'no-cors', 
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-                            body: JSON.stringify(finalData),
-                            redirect: 'follow' // Обязательно разрешаем редиректы гугла
+                            body: JSON.stringify(finalData)
                         })
-                        .then(res => console.log("Данные успешно отправлены в Google Script!"))
+                        .then(() => console.log("Данные успешно отправлены в Google Script!"))
                         .catch(err => console.error("Ошибка при отправке в Google Script:", err));
                     }
 
