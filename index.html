@@ -616,10 +616,6 @@
 
         const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
 
-        /**
-         * ИСПРАВЛЕНО: Парсинг текста с учетом HTML-тегов (<br>)
-         * Предотвращает поломку интервалов и съезжание текста на новые строки.
-         */
         function generateAnimatedText(text) {
             let delayCount = 0;
             return text.split('<br>').map(line => {
@@ -627,11 +623,10 @@
                     if (!word) return '';
                     let delay = delayCount++ * 0.03;
                     return `<span class="word-reveal" style="animation-delay: ${delay}s">${word}</span>`;
-                }).join(' '); // оставляем нормальный пробел
+                }).join(' ');
             }).join('<br>');
         }
 
-        // HTML для кнопки-крестика закрытия анкеты
         const closeBtnHtml = `<div class="close-btn" id="closeSurveyBtn">&times;</div>`;
 
         function renderLockedScreen() {
@@ -805,12 +800,14 @@
 
                     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
 
-                    // Функция для чистой отправки данных без CORS-костылей
+                    // Функция для отправки данных (ИСПРАВЛЕНО ДЛЯ ОБХОДА CORS-ОГРАНИЧЕНИЙ)
                     function sendData(finalData) {
                         fetch(scriptUrl, { 
                             method: 'POST', 
-                            headers: { 'Content-Type': 'application/json' }, 
-                            body: JSON.stringify(finalData) 
+                            // Указываем text/plain вместо application/json, чтобы превратить запрос в Simple Request
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                            body: JSON.stringify(finalData),
+                            redirect: 'follow' // Обязательно разрешаем редиректы гугла
                         })
                         .then(res => console.log("Данные успешно отправлены в Google Script!"))
                         .catch(err => console.error("Ошибка при отправке в Google Script:", err));
@@ -848,7 +845,6 @@
 
         document.addEventListener('click', function(e) {
 
-            // ОБРАБОТЧИК ДЛЯ ВОЗВРАТА В ХАБ ПРИ НАЖАТИИ КРЕСТИКА
             if (e.target && e.target.id === 'closeSurveyBtn') {
                 surveyContainer.classList.remove('fade-in');
                 surveyContainer.classList.add('fade-out');
