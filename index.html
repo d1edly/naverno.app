@@ -88,13 +88,6 @@
             margin: 20px auto;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-        }
-
-        /* Эффект печати текста */
         @keyframes typeLetter {
             to { opacity: 1; transform: translateY(0); }
         }
@@ -106,7 +99,6 @@
             animation: typeLetter 0.15s ease-out forwards;
         }
 
-        /* Плавное появление полей ввода */
         .inputs-fade {
             opacity: 0;
             transform: translateY(10px);
@@ -131,7 +123,6 @@
             z-index: 2;
         }
 
-        /* Глобальные соцсети */
         .global-socials {
             display: flex;
             justify-content: center;
@@ -162,11 +153,7 @@
             transform: translateY(-3px);
         }
 
-        .social-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text-main);
-        }
+        .social-btn svg { width: 20px; height: 20px; fill: var(--text-main); }
 
         .container {
             width: 90%;
@@ -189,10 +176,22 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        .container.fade-in, .container.fade-out {
-            animation: none; 
+        .scrollable-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
+        /* Кастомный скроллбар для длинных страниц (например, сходка) */
+        .scrollable-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .container.fade-in, .container.fade-out { animation: none; }
         .hidden { display: none !important; }
 
         .close-btn {
@@ -207,34 +206,93 @@
             line-height: 1;
             z-index: 10;
         }
-
-        .close-btn:hover {
-            color: var(--text-main);
-            transform: scale(1.2) rotate(90deg);
-        }
+        .close-btn:hover { color: var(--text-main); transform: scale(1.2) rotate(90deg); }
 
         /* ==========================================================================
-           4. ХАБ (ГЛАВНАЯ)
+           4. НОВЫЕ РАЗДЕЛЫ: ТАЙМЕР И СХОДКА
            ========================================================================== */
         .hub-manifest {
             font-size: 1rem;
             line-height: 1.6;
             color: var(--text-muted);
-            margin-bottom: 40px;
+            margin-bottom: 25px;
             text-align: center;
             font-weight: 400;
         }
 
-        #startHubBtn {
-            animation: pulse 2s infinite;
+        /* Таймер */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .timer-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 12px;
+            min-width: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .timer-val {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--text-main);
+            line-height: 1;
+            margin-bottom: 5px;
+            font-variant-numeric: tabular-nums; /* Чтобы цифры не прыгали */
+        }
+        .timer-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .timer-ready {
+            color: #4ade80 !important;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
         }
 
-        #startHubBtn:hover {
-            animation: none;
+        /* Сходка */
+        .meetup-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        .meetup-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .meetup-date { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+        .meetup-time { font-size: 1rem; color: var(--text-muted); }
+        .meetup-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        .meetup-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         /* ==========================================================================
-           5. ТЕКСТ ВОПРОСОВ
+           5. ТЕКСТ ВОПРОСОВ И ПОЛЯ ВВОДА
            ========================================================================== */
         .text-content {
             font-size: 1.2rem;
@@ -246,9 +304,6 @@
             text-align: center;
         }
 
-        /* ==========================================================================
-           6. ПОЛЯ ВВОДА ДАННЫХ
-           ========================================================================== */
         input[type="text"], textarea {
             width: 100%;
             box-sizing: border-box;
@@ -267,10 +322,7 @@
             user-select: text;
         }
 
-        input[type="text"]::placeholder, textarea::placeholder {
-            color: #555555;
-        }
-
+        input[type="text"]::placeholder, textarea::placeholder { color: #555555; }
         input[type="text"]:focus, textarea:focus {
             border-color: var(--border-hover);
             background: rgba(255, 255, 255, 0.02);
@@ -278,252 +330,53 @@
             transform: translateY(-2px);
         }
 
-        .words-column {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-        
-        .words-column input {
-            margin-bottom: 0;
-        }
+        .words-column { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; width: 100%; }
+        .words-column input { margin-bottom: 0; }
 
-        /* ==========================================================================
-           7. ИНТЕРАКТИВНЫЙ РЕГУЛЯТОР (СЛАЙДЕР)
-           ========================================================================== */
-        .slider-value {
-            font-size: 3rem;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-            color: var(--text-main);
-            transition: transform 0.2s ease;
-        }
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: var(--border-color);
-            height: 4px;
-            border-radius: 2px;
-            outline: none;
-            margin-bottom: 30px;
-        }
+        .slider-value { font-size: 3rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; color: var(--text-main); transition: transform 0.2s ease; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: var(--border-color); height: 4px; border-radius: 2px; outline: none; margin-bottom: 30px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: var(--accent); border-radius: 50%; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); transition: var(--transition); }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.25); box-shadow: 0 0 15px rgba(255,255,255,0.5); }
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: var(--transition); 
-        }
-        
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-            box-shadow: 0 0 15px rgba(255,255,255,0.5);
-        }
-
-        /* ==========================================================================
-           8. СЕТКА ДЛЯ ВЫБОРА ДНЕЙ И ДА/НЕТ
-           ========================================================================== */
-        .days-grid, .choice-grid {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
+        .days-grid, .choice-grid { display: grid; gap: 12px; margin-bottom: 30px; }
         .days-grid { grid-template-columns: repeat(4, 1fr); }
         .choice-grid { grid-template-columns: 1fr 1fr; }
 
-        .day-btn, .choice-btn {
-            padding: 14px 0;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-muted);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .day-btn:hover, .choice-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            transform: translateY(-2px);
-        }
-        
-        .day-btn.active, .choice-btn.active {
-            background: var(--text-main);
-            color: #000000;
-            border-color: var(--text-main);
-            font-weight: 700;
-            transform: scale(1.05);
-        }
+        .day-btn, .choice-btn { padding: 14px 0; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
+        .day-btn:hover, .choice-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); transform: translateY(-2px); }
+        .day-btn.active, .choice-btn.active { background: var(--text-main); color: #000000; border-color: var(--text-main); font-weight: 700; transform: scale(1.05); }
 
         /* ==========================================================================
-           9. ЧАСЫ (TIME PICKER)
+           6. ЧАСЫ (TIME PICKER)
            ========================================================================== */
-        .time-picker-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        .time-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 16px;
-            min-width: 120px;
-        }
-
-        .time-block-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .time-display {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .time-num-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .time-arrow {
-            background: none;
-            border: none;
-            color: #555;
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 5px;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .time-arrow:hover { 
-            color: var(--text-main); 
-            transform: scale(1.2);
-        }
-
-        .time-val {
-            font-size: 1.75rem;
-            font-weight: 700;
-            width: 40px;
-            text-align: center;
-            line-height: 1;
-        }
-
-        .time-separator {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-top: -2px;
-        }
+        .time-picker-container { display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 30px; }
+        .time-block { display: flex; flex-direction: column; align-items: center; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; min-width: 120px; }
+        .time-block-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; font-weight: 700; letter-spacing: 1px; }
+        .time-display { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .time-num-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .time-arrow { background: none; border: none; color: #555; font-size: 1rem; cursor: pointer; padding: 5px; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .time-arrow:hover { color: var(--text-main); transform: scale(1.2); }
+        .time-val { font-size: 1.75rem; font-weight: 700; width: 40px; text-align: center; line-height: 1; }
+        .time-separator { font-size: 1.5rem; font-weight: 700; color: var(--text-muted); margin-top: -2px; }
 
         /* ==========================================================================
-           10. КНОПКИ УПРАВЛЕНИЯ
+           7. КНОПКИ УПРАВЛЕНИЯ
            ========================================================================== */
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            flex: 2;
-            background: var(--accent);
-            color: #000000;
-            border: none;
-            padding: 16px 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-        }
-
-        .btn:hover:not(:disabled) {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
-        }
-
-        .btn:disabled {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.3);
-            cursor: not-allowed;
-        }
-
-        .btn-back {
-            flex: 1;
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-        
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--border-hover);
-        }
+        .nav-buttons { display: flex; gap: 12px; }
+        .btn { flex: 2; background: var(--accent); color: #000000; border: none; padding: 16px 20px; font-family: 'Inter', sans-serif; font-size: 1rem; border-radius: 12px; cursor: pointer; transition: var(--transition); font-weight: 600; }
+        .btn:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15); }
+        .btn:disabled { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.3); cursor: not-allowed; }
+        .btn-back { flex: 1; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--border-hover); }
 
         /* ==========================================================================
-           11. ЭКРАН УСПЕХА И ПЕРЕХОДЫ
+           8. ЭКРАН УСПЕХА И АНИМАЦИИ ПЕРЕХОДОВ
            ========================================================================== */
-        .locked-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 0;
-        }
+        .locked-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; }
+        .lock-icon-svg { color: var(--text-main); margin-bottom: 24px; opacity: 0; animation: fadeUpIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .locked-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; color: var(--text-main); letter-spacing: -0.5px; }
+        .locked-subtitle { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); font-weight: 400; }
 
-        .lock-icon-svg {
-            color: var(--text-main);
-            margin-bottom: 24px;
-            opacity: 0;
-            animation: fadeUpIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .locked-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
-        }
-
-        .locked-subtitle {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        /* Плавные переходы экранов */
         .fade-in { animation: fadeUpIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .fade-out { animation: fadeUpOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
@@ -531,7 +384,6 @@
             from { opacity: 0; transform: translateY(15px) scale(0.98); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         @keyframes fadeUpOut {
             from { opacity: 1; transform: translateY(0) scale(1); }
             to { opacity: 0; transform: translateY(-15px) scale(0.98); }
@@ -559,18 +411,140 @@
         </a>
     </div>
 
-    <div class="container fade-in" id="hub-container">
+    <!-- Главное меню навигации (Хаб) -->
+    <div class="container fade-in" id="main-hub">
+        <button class="btn" style="width: 100%; margin-bottom: 15px;" id="navJoinBtn">Стать частью нас</button>
+        <button class="btn btn-back" style="width: 100%;" id="navMeetupBtn">Сходка</button>
+    </div>
+
+    <!-- Блок "Стать частью нас" (Таймер и Анкета) -->
+    <div class="container hidden" id="join-container">
+        <div class="close-btn" id="closeJoinBtn">&times;</div>
+        
         <div class="hub-manifest">
             Если у тебя есть желание стать частью нашей студии — заполняй анкету. Кто знает, может, именно ты — тот самый недостающий пазл в нашей команде?
         </div>
-        <button class="btn" style="width: 100%;" id="startHubBtn">Заполнить анкету</button>
+        
+        <!-- Блок Таймера -->
+        <div id="timerWrapper">
+            <div class="text-content" style="font-size: 0.95rem; min-height: auto; margin-bottom: 15px; color: var(--text-muted);" id="timerTitle">
+                Анкета откроется через:
+            </div>
+            <div class="timer-container" id="countdownTimer">
+                <div class="timer-box"><div class="timer-val" id="t-days">00</div><div class="timer-label">Дней</div></div>
+                <div class="timer-box"><div class="timer-val" id="t-hours">00</div><div class="timer-label">Часов</div></div>
+                <div class="timer-box"><div class="timer-val" id="t-mins">00</div><div class="timer-label">Минут</div></div>
+                <div class="timer-box"><div class="timer-val" id="t-secs">00</div><div class="timer-label">Секунд</div></div>
+            </div>
+        </div>
+
+        <button class="btn" style="width: 100%;" id="startHubBtn" disabled>Заполнить анкету</button>
     </div>
 
+    <!-- Блок "Сходка" -->
+    <div class="container hidden scrollable-container" id="meetup-container">
+        <div class="close-btn" id="closeMeetupBtn">&times;</div>
+        
+        <h2 class="meetup-title">Сходка NAVERNO</h2>
+        <div class="meetup-info">
+            <div class="meetup-date">25 Июля 2026</div> <!-- Замени на нужную дату -->
+            <div class="meetup-time">Сбор в 18:00 по МСК</div> <!-- Замени на нужное время -->
+        </div>
+        
+        <div class="meetup-desc">
+            Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно.
+        </div>
+        
+        <!-- Фотографии локации -->
+        <img src="karta.jpg" alt="Карта мероприятия" class="meetup-img">
+        <img src="mesto.jpg" alt="Фотография места" class="meetup-img">
+    </div>
+
+    <!-- Контейнер для самой Анкеты -->
     <div class="container hidden" id="survey-container"></div>
 
     <script>
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
+        // ==========================================================
+        // ЛОГИКА ТАЙМЕРА (До 20.07.2026 12:00)
+        // ==========================================================
+        const targetDate = new Date('2026-07-20T12:00:00').getTime();
+        const startBtn = document.getElementById('startHubBtn');
+        const timerWrapper = document.getElementById('timerWrapper');
+        let timerInterval;
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance <= 0) {
+                // Если время пришло
+                clearInterval(timerInterval);
+                document.getElementById('t-days').innerText = "00";
+                document.getElementById('t-hours').innerText = "00";
+                document.getElementById('t-mins').innerText = "00";
+                document.getElementById('t-secs').innerText = "00";
+                
+                document.getElementById('timerTitle').innerHTML = '<span class="timer-ready">Анкета уже доступна!</span>';
+                
+                // Делаем кнопки зелеными для привлечения внимания
+                const timerVals = document.querySelectorAll('.timer-val');
+                timerVals.forEach(val => val.style.color = '#4ade80');
+                
+                startBtn.disabled = false;
+                return;
+            }
+
+            // Высчитываем время
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Обновляем HTML
+            document.getElementById('t-days').innerText = String(days).padStart(2, '0');
+            document.getElementById('t-hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('t-mins').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('t-secs').innerText = String(seconds).padStart(2, '0');
+        }
+
+        timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Вызов сразу при загрузке
+
+
+        // ==========================================================
+        // НАВИГАЦИЯ МЕЖДУ ОКНАМИ (ХАБ -> АНКЕТА -> СХОДКА)
+        // ==========================================================
+        const mainHub = document.getElementById('main-hub');
+        const joinContainer = document.getElementById('join-container');
+        const meetupContainer = document.getElementById('meetup-container');
+        const surveyContainer = document.getElementById('survey-container');
+
+        // Вспомогательная функция для плавного переключения окон
+        function switchContainers(hideEl, showEl) {
+            hideEl.classList.remove('fade-in');
+            hideEl.classList.add('fade-out');
+            
+            setTimeout(() => {
+                hideEl.classList.add('hidden');
+                showEl.classList.remove('hidden', 'fade-out');
+                showEl.classList.add('fade-in');
+            }, 400);
+        }
+
+        // Кнопки главного меню
+        document.getElementById('navJoinBtn').addEventListener('click', () => switchContainers(mainHub, joinContainer));
+        document.getElementById('navMeetupBtn').addEventListener('click', () => switchContainers(mainHub, meetupContainer));
+        
+        // Кнопки "Закрыть" (Крестик)
+        document.getElementById('closeJoinBtn').addEventListener('click', () => switchContainers(joinContainer, mainHub));
+        document.getElementById('closeMeetupBtn').addEventListener('click', () => switchContainers(meetupContainer, mainHub));
+
+
+        // ==========================================================
+        // ЛОГИКА АНКЕТЫ
+        // ==========================================================
         const questions = [
             { id: "q1", text: "Как тебе наш контент по десятибалльной системе?", type: "slider", min: 1, max: 10, default: 10 },
             { id: "q2", text: "С какого видео ты с нами познакомился и продолжил следить?", type: "text", placeholder: "Твой ответ..." },
@@ -588,18 +562,14 @@
         let userAnswers = {};
         let tempChoice = "";
         let selectedDays = [];
-
         let timeFromHour = 18;
         let timeFromMin = 0;
         let timeToHour = 22;
         let timeToMin = 0;
 
-        const hubContainer = document.getElementById('hub-container');
-        const surveyContainer = document.getElementById('survey-container');
         const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
-        const closeBtnHtml = `<div class="close-btn" id="closeSurveyBtn">&times;</div>`;
+        const closeSurveyBtnHtml = `<div class="close-btn" id="closeSurveyBtn">&times;</div>`;
 
-        // Улучшенный парсер печатной машинки. Сохраняет целостность слов и их правильный перенос.
         function generateTypewriterText(htmlString) {
             let delay = 0;
             const tempDiv = document.createElement('div');
@@ -611,29 +581,23 @@
 
                 for (let child of childNodes) {
                     if (child.nodeType === Node.TEXT_NODE) {
-                        // Разбиваем текст на слова и пробелы, чтобы анимировать буквы, но переносить слова целиком
                         const parts = child.textContent.split(/(\s+)/);
-                        
                         for (let part of parts) {
                             if (/\s+/.test(part)) {
-                                // Обычный пробел между словами (позволяет перенос строк)
                                 htmlResult += ' ';
                             } else if (part.length > 0) {
-                                // Оборачиваем целое слово в неразрывный контейнер, а внутри анимируем буквы
                                 htmlResult += `<span style="white-space: nowrap;">`;
                                 for (let char of part) {
                                     htmlResult += `<span class="letter-span" style="animation-delay: ${delay}s">${char}</span>`;
-                                    delay += 0.012; // Скорость появления букв (чуть ускорено для динамики)
+                                    delay += 0.012; 
                                 }
                                 htmlResult += `</span>`;
                             }
                         }
                     } else if (child.nodeType === Node.ELEMENT_NODE) {
-                        // Если тег — это перенос строки <br>, сохраняем его
                         if (child.tagName === 'BR') {
                             htmlResult += '<br>';
                         } else {
-                            // Рекурсивно обрабатываем другие вложенные теги, сохраняя их свойства
                             const outer = child.cloneNode(false);
                             const parsedInside = processNodes(child);
                             outer.innerHTML = parsedInside.html;
@@ -650,7 +614,7 @@
 
         function renderLockedScreen() {
             surveyContainer.innerHTML = `
-                ${closeBtnHtml}
+                ${closeSurveyBtnHtml}
                 <div class="locked-container fade-in">
                     <svg class="lock-icon-svg" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -666,15 +630,10 @@
             surveyContainer.style.background = "rgba(20, 20, 25, 0.8)";
         }
 
-        document.getElementById('startHubBtn').addEventListener('click', () => {
-            hubContainer.classList.remove('fade-in');
-            hubContainer.classList.add('fade-out');
-
-            setTimeout(() => {
-                hubContainer.classList.add('hidden');
-                surveyContainer.classList.remove('hidden');
-                renderStep();
-            }, 400); 
+        // Запуск анкеты по кнопке
+        startBtn.addEventListener('click', () => {
+            switchContainers(joinContainer, surveyContainer);
+            setTimeout(renderStep, 400); // Даем время на анимацию перед рендером
         });
 
         function renderStep() {
@@ -810,11 +769,10 @@
                     }
 
                     const btnText = (currentStep === questions.length - 1) ? "Отправить" : "Далее";
-                    
                     const typewriter = generateTypewriterText(q.text);
 
                     html = `
-                        ${closeBtnHtml}
+                        ${closeSurveyBtnHtml}
                         <div class="text-content">${typewriter.html}</div>
                         
                         <div class="inputs-fade" id="inputsWrapper">
@@ -827,7 +785,7 @@
                     `;
                 } else {
                     html = `
-                        ${closeBtnHtml}
+                        ${closeSurveyBtnHtml}
                         <div class="text-content" style="margin-bottom: 0; text-align: center;">
                             Обрабатываем ответы...
                         </div>
@@ -853,11 +811,7 @@
 
                     vkBridge.send('VKWebAppGetUserInfo')
                         .then(user => {
-                            const finalData = {
-                                ...userAnswers,
-                                userName: user.first_name + " " + user.last_name,
-                                userId: user.id
-                            };
+                            const finalData = { ...userAnswers, userName: user.first_name + " " + user.last_name, userId: user.id };
                             sendData(finalData);
                         })
                         .catch(err => {
@@ -895,15 +849,9 @@
 
         document.addEventListener('click', function(e) {
 
+            // Закрытие анкеты и возврат в хаб
             if (e.target && e.target.id === 'closeSurveyBtn') {
-                surveyContainer.classList.remove('fade-in');
-                surveyContainer.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    surveyContainer.classList.add('hidden');
-                    hubContainer.classList.remove('hidden', 'fade-out');
-                    hubContainer.classList.add('fade-in');
-                }, 400);
+                switchContainers(surveyContainer, mainHub);
                 return;
             }
 
