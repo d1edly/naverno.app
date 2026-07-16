@@ -52,9 +52,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* ==========================================================================
-           2. ЗАДНИЙ ФОН И АНИМАЦИИ
-           ========================================================================== */
         .ambient-light {
             position: absolute;
             width: 60vw;
@@ -104,14 +101,13 @@
             transform: translateY(10px);
             transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         .inputs-fade.show {
             opacity: 1;
             transform: translateY(0);
         }
 
         /* ==========================================================================
-           3. КОНТЕЙНЕРЫ И КАРТОЧКИ
+           2. КОНТЕЙНЕРЫ И КАРТОЧКИ
            ========================================================================== */
         .header {
             font-family: 'MarkerFat', sans-serif;
@@ -146,13 +142,11 @@
             font-weight: 500;
             font-size: 0.9rem;
         }
-
         .social-btn:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--border-hover);
             transform: translateY(-3px);
         }
-
         .social-btn svg { width: 20px; height: 20px; fill: var(--text-main); }
 
         .container {
@@ -176,20 +170,18 @@
             animation: float 6s ease-in-out infinite;
         }
 
+        /* Увеличенная ширина для раздела Сходки */
+        #meetup-container {
+            max-width: 650px;
+        }
+
         .scrollable-container {
             max-height: 70vh;
             overflow-y: auto;
             padding-right: 10px;
         }
-
-        /* Кастомный скроллбар для длинных страниц (например, сходка) */
-        .scrollable-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        .scrollable-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-        }
+        .scrollable-container::-webkit-scrollbar { width: 6px; }
+        .scrollable-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
 
         .container.fade-in, .container.fade-out { animation: none; }
         .hidden { display: none !important; }
@@ -209,146 +201,55 @@
         .close-btn:hover { color: var(--text-main); transform: scale(1.2) rotate(90deg); }
 
         /* ==========================================================================
-           4. НОВЫЕ РАЗДЕЛЫ: ТАЙМЕР И СХОДКА
+           3. ТАЙМЕР И СХОДКА
            ========================================================================== */
-        .hub-manifest {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 400;
-        }
+        .hub-manifest { font-size: 1rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 25px; text-align: center; font-weight: 400; }
+        .timer-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .timer-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); padding: 10px; border-radius: 12px; min-width: 65px; display: flex; flex-direction: column; align-items: center; }
+        .timer-val { font-size: 1.8rem; font-weight: 900; color: var(--text-main); line-height: 1; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+        .timer-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; }
+        .timer-ready { color: #4ade80 !important; text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
 
-        /* Таймер */
-        .timer-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-        .timer-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 12px;
-            min-width: 65px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .timer-val {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--text-main);
-            line-height: 1;
-            margin-bottom: 5px;
-            font-variant-numeric: tabular-nums; /* Чтобы цифры не прыгали */
-        }
-        .timer-label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .timer-ready {
-            color: #4ade80 !important;
-            text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
-        }
-
-        /* Сходка */
-        .meetup-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            margin-top: 10px;
-        }
-        .meetup-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
+        .meetup-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; margin-top: 10px; }
+        .meetup-info { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); }
         .meetup-date { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
         .meetup-time { font-size: 1rem; color: var(--text-muted); }
-        .meetup-desc {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            text-align: left;
-            margin-bottom: 25px;
-        }
+        .meetup-desc { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); text-align: left; margin-bottom: 25px; }
+        
         .meetup-img {
             width: 100%;
             border-radius: 12px;
             margin-bottom: 15px;
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .meetup-img:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         /* ==========================================================================
-           5. ТЕКСТ ВОПРОСОВ И ПОЛЯ ВВОДА
+           4. ЭЛЕМЕНТЫ АНКЕТЫ
            ========================================================================== */
-        .text-content {
-            font-size: 1.2rem;
-            font-weight: 500;
-            line-height: 1.5;
-            margin-bottom: 30px;
-            color: var(--text-main);
-            min-height: 4.5rem; 
-            text-align: center;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            box-sizing: border-box;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            outline: none;
-            transition: var(--transition);
-            resize: none;
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
+        .text-content { font-size: 1.2rem; font-weight: 500; line-height: 1.5; margin-bottom: 30px; color: var(--text-main); min-height: 4.5rem; text-align: center; }
+        input[type="text"], textarea { width: 100%; box-sizing: border-box; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 1rem; padding: 16px; border-radius: 12px; margin-bottom: 24px; outline: none; transition: var(--transition); resize: none; user-select: text; }
         input[type="text"]::placeholder, textarea::placeholder { color: #555555; }
-        input[type="text"]:focus, textarea:focus {
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.02);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
+        input[type="text"]:focus, textarea:focus { border-color: var(--border-hover); background: rgba(255, 255, 255, 0.02); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05); transform: translateY(-2px); }
         .words-column { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; width: 100%; }
         .words-column input { margin-bottom: 0; }
-
         .slider-value { font-size: 3rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; color: var(--text-main); transition: transform 0.2s ease; }
         input[type="range"] { -webkit-appearance: none; width: 100%; background: var(--border-color); height: 4px; border-radius: 2px; outline: none; margin-bottom: 30px; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: var(--accent); border-radius: 50%; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); transition: var(--transition); }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.25); box-shadow: 0 0 15px rgba(255,255,255,0.5); }
-
         .days-grid, .choice-grid { display: grid; gap: 12px; margin-bottom: 30px; }
         .days-grid { grid-template-columns: repeat(4, 1fr); }
         .choice-grid { grid-template-columns: 1fr 1fr; }
-
         .day-btn, .choice-btn { padding: 14px 0; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
         .day-btn:hover, .choice-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); transform: translateY(-2px); }
         .day-btn.active, .choice-btn.active { background: var(--text-main); color: #000000; border-color: var(--text-main); font-weight: 700; transform: scale(1.05); }
 
-        /* ==========================================================================
-           6. ЧАСЫ (TIME PICKER)
-           ========================================================================== */
         .time-picker-container { display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 30px; }
         .time-block { display: flex; flex-direction: column; align-items: center; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; min-width: 120px; }
         .time-block-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; font-weight: 700; letter-spacing: 1px; }
@@ -360,7 +261,7 @@
         .time-separator { font-size: 1.5rem; font-weight: 700; color: var(--text-muted); margin-top: -2px; }
 
         /* ==========================================================================
-           7. КНОПКИ УПРАВЛЕНИЯ
+           5. КНОПКИ УПРАВЛЕНИЯ
            ========================================================================== */
         .nav-buttons { display: flex; gap: 12px; }
         .btn { flex: 2; background: var(--accent); color: #000000; border: none; padding: 16px 20px; font-family: 'Inter', sans-serif; font-size: 1rem; border-radius: 12px; cursor: pointer; transition: var(--transition); font-weight: 600; }
@@ -369,9 +270,10 @@
         .btn-back { flex: 1; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
         .btn-back:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--border-hover); }
 
-        /* ==========================================================================
-           8. ЭКРАН УСПЕХА И АНИМАЦИИ ПЕРЕХОДОВ
-           ========================================================================== */
+        /* Темная кнопка для хаба при наведении */
+        #navMeetupBtn { transition: all 0.3s ease; }
+        #navMeetupBtn:hover { background: rgba(0, 0, 0, 0.8); border-color: rgba(255, 255, 255, 0.1); color: #ffffff; }
+
         .locked-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; }
         .lock-icon-svg { color: var(--text-main); margin-bottom: 24px; opacity: 0; animation: fadeUpIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .locked-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; color: var(--text-main); letter-spacing: -0.5px; }
@@ -380,14 +282,40 @@
         .fade-in { animation: fadeUpIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .fade-out { animation: fadeUpOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        @keyframes fadeUpIn {
-            from { opacity: 0; transform: translateY(15px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes fadeUpIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes fadeUpOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-15px) scale(0.98); } }
+
+        /* ==========================================================================
+           6. МОДАЛЬНОЕ ОКНО ДЛЯ ФОТОГРАФИЙ (FULLSCREEN ZOOM)
+           ========================================================================== */
+        .image-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-        @keyframes fadeUpOut {
-            from { opacity: 1; transform: translateY(0) scale(1); }
-            to { opacity: 0; transform: translateY(-15px) scale(0.98); }
+        .image-modal.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            max-width: 90%; max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            object-fit: contain;
         }
+        .image-modal.show .modal-content { transform: scale(1); }
+        .close-modal {
+            position: absolute; top: 20px; right: 30px;
+            color: white; font-size: 40px; font-weight: 300;
+            cursor: pointer; z-index: 1001; line-height: 1;
+            transition: var(--transition);
+        }
+        .close-modal:hover { color: var(--text-muted); transform: scale(1.2); }
+
     </style>
 </head>
 <body>
@@ -417,7 +345,7 @@
         <button class="btn btn-back" style="width: 100%;" id="navMeetupBtn">Сходка</button>
     </div>
 
-    <!-- Блок "Стать частью нас" (Таймер и Анкета) -->
+    <!-- Блок "Стать частью нас" -->
     <div class="container hidden" id="join-container">
         <div class="close-btn" id="closeJoinBtn">&times;</div>
         
@@ -425,7 +353,6 @@
             Если у тебя есть желание стать частью нашей студии — заполняй анкету. Кто знает, может, именно ты — тот самый недостающий пазл в нашей команде?
         </div>
         
-        <!-- Блок Таймера -->
         <div id="timerWrapper">
             <div class="text-content" style="font-size: 0.95rem; min-height: auto; margin-bottom: 15px; color: var(--text-muted);" id="timerTitle">
                 Анкета откроется через:
@@ -447,17 +374,26 @@
         
         <h2 class="meetup-title">Сходка NAVERNO</h2>
         <div class="meetup-info">
-            <div class="meetup-date">25 Июля 2026</div> <!-- Замени на нужную дату -->
-            <div class="meetup-time">Сбор в 18:00 по МСК</div> <!-- Замени на нужное время -->
+            <div class="meetup-date">25 Июля 2026</div> 
+            <div class="meetup-time">Сбор в 18:00 по МСК</div> 
         </div>
         
         <div class="meetup-desc">
-            Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно.
+            Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно. Кликай на фото ниже, чтобы рассмотреть всё детальнее.
         </div>
         
         <!-- Фотографии локации -->
         <img src="karta.jpg" alt="Карта мероприятия" class="meetup-img">
         <img src="mesto.jpg" alt="Фотография места" class="meetup-img">
+
+        <!-- Кнопка возврата внизу окна -->
+        <button class="btn btn-back" id="bottomBackToHubBtn" style="width: 100%; margin-top: 15px;">Вернуться в меню</button>
+    </div>
+
+    <!-- Модальное окно для полноэкранного просмотра фото -->
+    <div class="image-modal" id="imageModal">
+        <span class="close-modal" id="closeModalBtn">&times;</span>
+        <img class="modal-content" id="zoomedImg">
     </div>
 
     <!-- Контейнер для самой Анкеты -->
@@ -467,11 +403,40 @@
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
         // ==========================================================
+        // ПРОСМОТР ФОТО (MODAL/LIGHTBOX)
+        // ==========================================================
+        const imageModal = document.getElementById('imageModal');
+        const zoomedImg = document.getElementById('zoomedImg');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // Открываем модалку при клике на фото сходки
+        document.querySelectorAll('.meetup-img').forEach(img => {
+            img.addEventListener('click', function() {
+                zoomedImg.src = this.src;
+                imageModal.classList.add('show');
+            });
+        });
+
+        // Закрытие модалки
+        function closeImageModal() {
+            imageModal.classList.remove('show');
+            setTimeout(() => { zoomedImg.src = ""; }, 300); // Очищаем после анимации
+        }
+
+        closeModalBtn.addEventListener('click', closeImageModal);
+        imageModal.addEventListener('click', function(e) {
+            // Закрываем, если кликнули на темный фон (а не на саму картинку)
+            if (e.target === imageModal) {
+                closeImageModal();
+            }
+        });
+
+
+        // ==========================================================
         // ЛОГИКА ТАЙМЕРА (До 20.07.2026 12:00)
         // ==========================================================
         const targetDate = new Date('2026-07-20T12:00:00').getTime();
         const startBtn = document.getElementById('startHubBtn');
-        const timerWrapper = document.getElementById('timerWrapper');
         let timerInterval;
 
         function updateTimer() {
@@ -479,30 +444,23 @@
             const distance = targetDate - now;
 
             if (distance <= 0) {
-                // Если время пришло
                 clearInterval(timerInterval);
                 document.getElementById('t-days').innerText = "00";
                 document.getElementById('t-hours').innerText = "00";
                 document.getElementById('t-mins').innerText = "00";
                 document.getElementById('t-secs').innerText = "00";
-                
                 document.getElementById('timerTitle').innerHTML = '<span class="timer-ready">Анкета уже доступна!</span>';
                 
-                // Делаем кнопки зелеными для привлечения внимания
-                const timerVals = document.querySelectorAll('.timer-val');
-                timerVals.forEach(val => val.style.color = '#4ade80');
-                
+                document.querySelectorAll('.timer-val').forEach(val => val.style.color = '#4ade80');
                 startBtn.disabled = false;
                 return;
             }
 
-            // Высчитываем время
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Обновляем HTML
             document.getElementById('t-days').innerText = String(days).padStart(2, '0');
             document.getElementById('t-hours').innerText = String(hours).padStart(2, '0');
             document.getElementById('t-mins').innerText = String(minutes).padStart(2, '0');
@@ -510,18 +468,16 @@
         }
 
         timerInterval = setInterval(updateTimer, 1000);
-        updateTimer(); // Вызов сразу при загрузке
-
+        updateTimer(); 
 
         // ==========================================================
-        // НАВИГАЦИЯ МЕЖДУ ОКНАМИ (ХАБ -> АНКЕТА -> СХОДКА)
+        // НАВИГАЦИЯ МЕЖДУ ОКНАМИ
         // ==========================================================
         const mainHub = document.getElementById('main-hub');
         const joinContainer = document.getElementById('join-container');
         const meetupContainer = document.getElementById('meetup-container');
         const surveyContainer = document.getElementById('survey-container');
 
-        // Вспомогательная функция для плавного переключения окон
         function switchContainers(hideEl, showEl) {
             hideEl.classList.remove('fade-in');
             hideEl.classList.add('fade-out');
@@ -533,13 +489,16 @@
             }, 400);
         }
 
-        // Кнопки главного меню
+        // Открытие разделов
         document.getElementById('navJoinBtn').addEventListener('click', () => switchContainers(mainHub, joinContainer));
         document.getElementById('navMeetupBtn').addEventListener('click', () => switchContainers(mainHub, meetupContainer));
         
-        // Кнопки "Закрыть" (Крестик)
+        // Закрытие разделов (через крестик)
         document.getElementById('closeJoinBtn').addEventListener('click', () => switchContainers(joinContainer, mainHub));
         document.getElementById('closeMeetupBtn').addEventListener('click', () => switchContainers(meetupContainer, mainHub));
+
+        // Возврат в меню по кнопке внизу сходки
+        document.getElementById('bottomBackToHubBtn').addEventListener('click', () => switchContainers(meetupContainer, mainHub));
 
 
         // ==========================================================
@@ -562,10 +521,7 @@
         let userAnswers = {};
         let tempChoice = "";
         let selectedDays = [];
-        let timeFromHour = 18;
-        let timeFromMin = 0;
-        let timeToHour = 22;
-        let timeToMin = 0;
+        let timeFromHour = 18, timeFromMin = 0, timeToHour = 22, timeToMin = 0;
 
         const isAlreadySubmitted = localStorage.getItem('naverno_anketa_submitted') === 'true';
         const closeSurveyBtnHtml = `<div class="close-btn" id="closeSurveyBtn">&times;</div>`;
@@ -574,18 +530,15 @@
             let delay = 0;
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlString;
-
             function processNodes(node) {
                 let htmlResult = '';
                 const childNodes = Array.from(node.childNodes);
-
                 for (let child of childNodes) {
                     if (child.nodeType === Node.TEXT_NODE) {
                         const parts = child.textContent.split(/(\s+)/);
                         for (let part of parts) {
-                            if (/\s+/.test(part)) {
-                                htmlResult += ' ';
-                            } else if (part.length > 0) {
+                            if (/\s+/.test(part)) htmlResult += ' ';
+                            else if (part.length > 0) {
                                 htmlResult += `<span style="white-space: nowrap;">`;
                                 for (let char of part) {
                                     htmlResult += `<span class="letter-span" style="animation-delay: ${delay}s">${char}</span>`;
@@ -595,9 +548,8 @@
                             }
                         }
                     } else if (child.nodeType === Node.ELEMENT_NODE) {
-                        if (child.tagName === 'BR') {
-                            htmlResult += '<br>';
-                        } else {
+                        if (child.tagName === 'BR') htmlResult += '<br>';
+                        else {
                             const outer = child.cloneNode(false);
                             const parsedInside = processNodes(child);
                             outer.innerHTML = parsedInside.html;
@@ -607,7 +559,6 @@
                 }
                 return { html: htmlResult, delay };
             }
-
             const result = processNodes(tempDiv);
             return { html: result.html, totalDurationMs: result.delay * 1000 };
         }
@@ -621,19 +572,15 @@
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     <div class="locked-title">Анкета отправлена</div>
-                    <div class="locked-subtitle">
-                        Твои ответы уже улетели к нам. <br>
-                        Мы изучим их и свяжемся в ЛС.<br><br>
-                    </div>
+                    <div class="locked-subtitle">Твои ответы уже улетели к нам. <br>Мы изучим их и свяжемся в ЛС.</div>
                 </div>
             `;
             surveyContainer.style.background = "rgba(20, 20, 25, 0.8)";
         }
 
-        // Запуск анкеты по кнопке
         startBtn.addEventListener('click', () => {
             switchContainers(joinContainer, surveyContainer);
-            setTimeout(renderStep, 400); // Даем время на анимацию перед рендером
+            setTimeout(renderStep, 400); 
         });
 
         function renderStep() {
@@ -649,7 +596,6 @@
 
             setTimeout(() => {
                 let html = '';
-
                 if (currentStep < questions.length) {
                     const q = questions[currentStep];
                     let inputHtml = '';
@@ -664,54 +610,36 @@
                         isNextDisabled = !savedVal;
                     } else if (q.type === 'slider') {
                         const currentVal = savedVal || q.default;
-                        inputHtml = `
-                            <div class="slider-value" id="sliderVal">${currentVal}</div>
-                            <input type="range" id="answerInput" class="custom-slider" min="${q.min}" max="${q.max}" value="${currentVal}">
-                        `;
+                        inputHtml = `<div class="slider-value" id="sliderVal">${currentVal}</div><input type="range" id="answerInput" class="custom-slider" min="${q.min}" max="${q.max}" value="${currentVal}">`;
                         isNextDisabled = false; 
                     } else if (q.type === 'words') {
                         const words = savedVal ? savedVal.split(", ") : ["", "", ""];
-                        inputHtml = `
-                            <div class="words-column">
-                                <input type="text" id="w1" class="word-input" placeholder="Слово 1" value="${words[0] || ''}">
-                                <input type="text" id="w2" class="word-input" placeholder="Слово 2" value="${words[1] || ''}">
-                                <input type="text" id="w3" class="word-input" placeholder="Слово 3" value="${words[2] || ''}">
-                            </div>
-                        `;
+                        inputHtml = `<div class="words-column">
+                            <input type="text" id="w1" class="word-input" placeholder="Слово 1" value="${words[0] || ''}">
+                            <input type="text" id="w2" class="word-input" placeholder="Слово 2" value="${words[1] || ''}">
+                            <input type="text" id="w3" class="word-input" placeholder="Слово 3" value="${words[2] || ''}">
+                        </div>`;
                         isNextDisabled = !(words[0] && words[1] && words[2]);
                     } else if (q.type === 'choice') {
                         tempChoice = savedVal;
-                        inputHtml = `
-                            <div class="choice-grid">
-                                <button class="choice-btn ${tempChoice === 'Да' ? 'active' : ''}" data-val="Да">Да</button>
-                                <button class="choice-btn ${tempChoice === 'Нет' ? 'active' : ''}" data-val="Нет">Нет</button>
-                            </div>
-                        `;
+                        inputHtml = `<div class="choice-grid">
+                            <button class="choice-btn ${tempChoice === 'Да' ? 'active' : ''}" data-val="Да">Да</button>
+                            <button class="choice-btn ${tempChoice === 'Нет' ? 'active' : ''}" data-val="Нет">Нет</button>
+                        </div>`;
                         isNextDisabled = !tempChoice;
                     } else if (q.type === 'days') {
                         selectedDays = savedVal ? savedVal.split(", ") : [];
                         const daysList = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс", "Каждый день"];
-                        let daysButtons = daysList.map(day => {
-                            const activeClass = selectedDays.includes(day) ? 'active' : '';
-                            return `<button class="day-btn ${activeClass}" data-day="${day}">${day}</button>`;
-                        }).join('');
-
+                        let daysButtons = daysList.map(day => `<button class="day-btn ${selectedDays.includes(day) ? 'active' : ''}" data-day="${day}">${day}</button>`).join('');
                         inputHtml = `<div class="days-grid">${daysButtons}</div>`;
                         isNextDisabled = selectedDays.length === 0;
                     } else if (q.type === 'timepicker') {
                         if (savedVal) {
                             const parse = savedVal.match(/с (\d+):(\d+) до (\d+):(\d+)/);
-                            if (parse) {
-                                timeFromHour = parseInt(parse[1]);
-                                timeFromMin = parseInt(parse[2]);
-                                timeToHour = parseInt(parse[3]);
-                                timeToMin = parseInt(parse[4]);
-                            }
+                            if (parse) { timeFromHour = parseInt(parse[1]); timeFromMin = parseInt(parse[2]); timeToHour = parseInt(parse[3]); timeToMin = parseInt(parse[4]); }
                         }
-                        const fH = String(timeFromHour).padStart(2, '0');
-                        const fM = String(timeFromMin).padStart(2, '0');
-                        const tH = String(timeToHour).padStart(2, '0');
-                        const tM = String(timeToMin).padStart(2, '0');
+                        const fH = String(timeFromHour).padStart(2, '0'), fM = String(timeFromMin).padStart(2, '0');
+                        const tH = String(timeToHour).padStart(2, '0'), tM = String(timeToMin).padStart(2, '0');
 
                         inputHtml = `
                             <div class="time-picker-container">
@@ -719,23 +647,15 @@
                                     <div class="time-block-label">С</div>
                                     <div class="time-display">
                                         <div class="time-num-group">
-                                            <button class="time-arrow" data-action="up" data-target="fromHour">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="up" data-target="fromHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
                                             <span class="time-val" id="fromHour">${fH}</span>
-                                            <button class="time-arrow" data-action="down" data-target="fromHour">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="down" data-target="fromHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
                                         </div>
                                         <span class="time-separator">:</span>
                                         <div class="time-num-group">
-                                            <button class="time-arrow" data-action="up" data-target="fromMin">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="up" data-target="fromMin"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
                                             <span class="time-val" id="fromMin">${fM}</span>
-                                            <button class="time-arrow" data-action="down" data-target="fromMin">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="down" data-target="fromMin"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg></button>
                                         </div>
                                     </div>
                                 </div>
@@ -743,23 +663,15 @@
                                     <div class="time-block-label">ДО</div>
                                     <div class="time-display">
                                         <div class="time-num-group">
-                                            <button class="time-arrow" data-action="up" data-target="toHour">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="up" data-target="toHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
                                             <span class="time-val" id="toHour">${tH}</span>
-                                            <button class="time-arrow" data-action="down" data-target="toHour">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="down" data-target="toHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
                                         </div>
                                         <span class="time-separator">:</span>
                                         <div class="time-num-group">
-                                            <button class="time-arrow" data-action="up" data-target="toMin">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="up" data-target="toMin"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
                                             <span class="time-val" id="toMin">${tM}</span>
-                                            <button class="time-arrow" data-action="down" data-target="toMin">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg>
-                                            </button>
+                                            <button class="time-arrow" data-action="down" data-target="toMin"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg></button>
                                         </div>
                                     </div>
                                 </div>
@@ -774,7 +686,6 @@
                     html = `
                         ${closeSurveyBtnHtml}
                         <div class="text-content">${typewriter.html}</div>
-                        
                         <div class="inputs-fade" id="inputsWrapper">
                             ${inputHtml}
                             <div class="nav-buttons">
@@ -786,49 +697,32 @@
                 } else {
                     html = `
                         ${closeSurveyBtnHtml}
-                        <div class="text-content" style="margin-bottom: 0; text-align: center;">
-                            Обрабатываем ответы...
-                        </div>
+                        <div class="text-content" style="margin-bottom: 0; text-align: center;">Обрабатываем ответы...</div>
                         <div class="loader"></div>
-                        <div class="text-content" style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
-                            Пожалуйста, подождите
-                        </div>
+                        <div class="text-content" style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); text-align: center;">Пожалуйста, подождите</div>
                     `;
                     
                     localStorage.setItem('naverno_anketa_submitted', 'true');
                     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
 
                     function sendData(finalData) {
-                        fetch(scriptUrl, { 
-                            method: 'POST', 
-                            mode: 'no-cors', 
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-                            body: JSON.stringify(finalData)
-                        })
-                        .then(() => console.log("Данные успешно отправлены в Google Script!"))
-                        .catch(err => console.error("Ошибка при отправке в Google Script:", err));
+                        fetch(scriptUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(finalData) })
+                        .then(() => console.log("Успех"))
+                        .catch(err => console.error("Ошибка", err));
                     }
 
                     vkBridge.send('VKWebAppGetUserInfo')
-                        .then(user => {
-                            const finalData = { ...userAnswers, userName: user.first_name + " " + user.last_name, userId: user.id };
-                            sendData(finalData);
-                        })
-                        .catch(err => {
-                            const finalData = { ...userAnswers, userName: "Аноним", userId: 0 };
-                            sendData(finalData);
-                        });
+                        .then(user => sendData({ ...userAnswers, userName: user.first_name + " " + user.last_name, userId: user.id }))
+                        .catch(() => sendData({ ...userAnswers, userName: "Аноним", userId: 0 }));
 
                     setTimeout(() => {
                         surveyContainer.classList.remove('fade-in');
                         surveyContainer.classList.add('fade-out');
-                        
                         setTimeout(() => {
                             renderLockedScreen();
                             surveyContainer.classList.remove('fade-out');
                             surveyContainer.classList.add('fade-in');
                         }, 400); 
-                        
                     }, 2500); 
                 }
 
@@ -848,26 +742,13 @@
         }
 
         document.addEventListener('click', function(e) {
-
-            // Закрытие анкеты и возврат в хаб
-            if (e.target && e.target.id === 'closeSurveyBtn') {
-                switchContainers(surveyContainer, mainHub);
-                return;
-            }
-
-            if (e.target && e.target.id === 'backBtn') {
-                currentStep--;
-                renderStep();
-                return;
-            }
+            if (e.target && e.target.id === 'closeSurveyBtn') { switchContainers(surveyContainer, mainHub); return; }
+            if (e.target && e.target.id === 'backBtn') { currentStep--; renderStep(); return; }
 
             if (e.target && e.target.classList.contains('choice-btn')) {
-                const btns = document.querySelectorAll('.choice-btn');
-                btns.forEach(btn => btn.classList.remove('active'));
-                
+                document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
                 tempChoice = e.target.getAttribute('data-val');
-                
                 const nextBtn = document.getElementById('nextBtn');
                 if (nextBtn) nextBtn.disabled = false;
                 return;
@@ -875,23 +756,17 @@
 
             if (e.target && e.target.classList.contains('day-btn')) {
                 const day = e.target.getAttribute('data-day');
-                
                 if (day === "Каждый день") {
-                    if (selectedDays.includes("Каждый день")) selectedDays = [];
-                    else selectedDays = ["Каждый день"];
+                    selectedDays = selectedDays.includes("Каждый день") ? [] : ["Каждый день"];
                 } else {
                     selectedDays = selectedDays.filter(d => d !== "Каждый день");
-                    if (selectedDays.includes(day)) selectedDays = selectedDays.filter(d => d !== day);
-                    else selectedDays.push(day);
+                    selectedDays = selectedDays.includes(day) ? selectedDays.filter(d => d !== day) : [...selectedDays, day];
                 }
-
-                const btns = document.querySelectorAll('.day-btn');
-                btns.forEach(btn => {
+                document.querySelectorAll('.day-btn').forEach(btn => {
                     const bDay = btn.getAttribute('data-day');
                     if (selectedDays.includes(bDay)) btn.classList.add('active');
                     else btn.classList.remove('active');
                 });
-
                 const nextBtn = document.getElementById('nextBtn');
                 if (nextBtn) nextBtn.disabled = selectedDays.length === 0;
                 return;
@@ -902,60 +777,30 @@
                 const action = btn.getAttribute('data-action');
                 const target = btn.getAttribute('data-target');
 
-                if (target === 'fromHour') {
-                    timeFromHour = (action === 'up') ? (timeFromHour + 1) % 24 : (timeFromHour - 1 + 24) % 24;
-                    document.getElementById('fromHour').innerText = String(timeFromHour).padStart(2, '0');
-                } else if (target === 'toHour') {
-                    timeToHour = (action === 'up') ? (timeToHour + 1) % 24 : (timeToHour - 1 + 24) % 24;
-                    document.getElementById('toHour').innerText = String(timeToHour).padStart(2, '0');
-                } else if (target === 'fromMin') {
-                    timeFromMin = (action === 'up') ? (timeFromMin + 5) % 60 : (timeFromMin - 5 + 60) % 60;
-                    document.getElementById('fromMin').innerText = String(timeFromMin).padStart(2, '0');
-                } else if (target === 'toMin') {
-                    timeToMin = (action === 'up') ? (timeToMin + 5) % 60 : (timeToMin - 5 + 60) % 60;
-                    document.getElementById('toMin').innerText = String(timeToMin).padStart(2, '0');
-                }
+                if (target === 'fromHour') { timeFromHour = (action === 'up') ? (timeFromHour + 1) % 24 : (timeFromHour - 1 + 24) % 24; document.getElementById('fromHour').innerText = String(timeFromHour).padStart(2, '0'); }
+                else if (target === 'toHour') { timeToHour = (action === 'up') ? (timeToHour + 1) % 24 : (timeToHour - 1 + 24) % 24; document.getElementById('toHour').innerText = String(timeToHour).padStart(2, '0'); }
+                else if (target === 'fromMin') { timeFromMin = (action === 'up') ? (timeFromMin + 5) % 60 : (timeFromMin - 5 + 60) % 60; document.getElementById('fromMin').innerText = String(timeFromMin).padStart(2, '0'); }
+                else if (target === 'toMin') { timeToMin = (action === 'up') ? (timeToMin + 5) % 60 : (timeToMin - 5 + 60) % 60; document.getElementById('toMin').innerText = String(timeToMin).padStart(2, '0'); }
                 return;
             }
 
             if (e.target && e.target.id === 'nextBtn') {
                 const q = questions[currentStep];
-                
-                if (q.type === 'slider' || q.type === 'text' || q.type === 'textarea') {
-                    userAnswers[q.id] = document.getElementById('answerInput').value.trim();
-                } else if (q.type === 'words') {
-                    const w1 = document.getElementById('w1').value.trim();
-                    const w2 = document.getElementById('w2').value.trim();
-                    const w3 = document.getElementById('w3').value.trim();
-                    userAnswers[q.id] = `${w1}, ${w2}, ${w3}`;
-                } else if (q.type === 'choice') {
-                    userAnswers[q.id] = tempChoice;
-                } else if (q.type === 'days') {
-                    userAnswers[q.id] = selectedDays.join(', ');
-                } else if (q.type === 'timepicker') {
-                    const fH = String(timeFromHour).padStart(2, '0');
-                    const fM = String(timeFromMin).padStart(2, '0');
-                    const tH = String(timeToHour).padStart(2, '0');
-                    const tM = String(timeToMin).padStart(2, '0');
-                    userAnswers[q.id] = `с ${fH}:${fM} до ${tH}:${tM}`;
-                }
-                
-                currentStep++;
-                renderStep();
-                return;
+                if (['slider', 'text', 'textarea'].includes(q.type)) userAnswers[q.id] = document.getElementById('answerInput').value.trim();
+                else if (q.type === 'words') userAnswers[q.id] = `${document.getElementById('w1').value.trim()}, ${document.getElementById('w2').value.trim()}, ${document.getElementById('w3').value.trim()}`;
+                else if (q.type === 'choice') userAnswers[q.id] = tempChoice;
+                else if (q.type === 'days') userAnswers[q.id] = selectedDays.join(', ');
+                else if (q.type === 'timepicker') userAnswers[q.id] = `с ${String(timeFromHour).padStart(2, '0')}:${String(timeFromMin).padStart(2, '0')} до ${String(timeToHour).padStart(2, '0')}:${String(timeToMin).padStart(2, '0')}`;
+                currentStep++; renderStep(); return;
             }
         });
 
         document.addEventListener('input', function(e) {
             if (!questions[currentStep]) return;
-            const q = questions[currentStep];
             const nextBtn = document.getElementById('nextBtn');
-
             if (!nextBtn) return;
 
-            if (e.target && e.target.classList.contains('custom-input')) {
-                nextBtn.disabled = e.target.value.trim().length === 0;
-            }
+            if (e.target && e.target.classList.contains('custom-input')) nextBtn.disabled = e.target.value.trim().length === 0;
 
             if (e.target && e.target.classList.contains('custom-slider')) {
                 const valDisplay = document.getElementById('sliderVal');
@@ -967,10 +812,7 @@
             }
 
             if (e.target && e.target.classList.contains('word-input')) {
-                const w1 = document.getElementById('w1');
-                const w2 = document.getElementById('w2');
-                const w3 = document.getElementById('w3');
-
+                const w1 = document.getElementById('w1'), w2 = document.getElementById('w2'), w3 = document.getElementById('w3');
                 if (w1 && w2 && w3) {
                     if (w1.value.includes(' ')) w1.value = w1.value.replace(/\s/g, '');
                     if (w2.value.includes(' ')) w2.value = w2.value.replace(/\s/g, '');
@@ -979,7 +821,6 @@
                 }
             }
         });
-
     </script>
 </body>
 </html>
