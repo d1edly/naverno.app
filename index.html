@@ -171,7 +171,7 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        /* Убираем плашку и рамки для контейнера сходки */
+        /* Настройки для контейнера сходки (фиксированная высота, flex) */
         #meetup-container.container {
             max-width: 650px;
             background: transparent;
@@ -179,21 +179,27 @@
             box-shadow: none;
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
-            padding: 15px; 
-            animation: none; /* Убираем эффект float для чистого текста */
+            padding: 10px; 
+            animation: none;
+            height: 85vh; /* Ограничиваем высоту */
+            justify-content: space-between; /* Распределяем пространство */
         }
 
-        .scrollable-container {
-            max-height: 70vh;
+        /* Область, которая будет скроллиться внутри сходки */
+        .meetup-scroll-area {
+            flex-grow: 1;
             overflow-y: auto;
             overflow-x: hidden;
             padding-right: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        /* Прозрачный скроллбар */
-        .scrollable-container::-webkit-scrollbar { width: 6px; }
-        .scrollable-container::-webkit-scrollbar-thumb { background: transparent; }
-        .scrollable-container::-webkit-scrollbar-track { background: transparent; }
+        .meetup-scroll-area::-webkit-scrollbar { width: 6px; }
+        .meetup-scroll-area::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+        .meetup-scroll-area::-webkit-scrollbar-track { background: transparent; }
 
         .container.fade-in, .container.fade-out, .global-socials.fade-in, .global-socials.fade-out { animation: none; }
         .hidden { display: none !important; }
@@ -208,20 +214,25 @@
         .timer-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; }
         .timer-ready { color: #4ade80 !important; text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
 
-        .meetup-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; margin-top: 10px; }
+        .meetup-title { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            margin-bottom: 15px; 
+            margin-top: 5px; 
+            flex-shrink: 0; /* Не даём сжиматься заголовку */
+        }
         
-        /* Убираем рамки и фон у информации о сходке */
-        .meetup-info { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; padding: 0; background: transparent; border: none; }
+        .meetup-info { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; padding: 0; background: transparent; border: none; width: 100%; text-align: center;}
         .meetup-date { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
         .meetup-time { font-size: 1rem; color: var(--text-muted); }
-        .meetup-desc { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); text-align: left; margin-bottom: 25px; }
+        .meetup-desc { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); text-align: left; margin-bottom: 20px; width: 100%;}
         
         .meetup-img-label {
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-main);
             text-align: left;
-            margin: 20px 0 10px 0;
+            margin: 15px 0 10px 0;
             width: 100%;
         }
 
@@ -229,13 +240,31 @@
             width: 100%;
             border-radius: 12px;
             margin-bottom: 15px;
-            border: none; /* Убрана рамка */
-            box-shadow: none; /* Убрана тень */
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-        .meetup-img:hover {
-            transform: scale(1.02);
+        .meetup-img:hover { transform: scale(1.02); }
+
+        /* Блок счетчика и кнопки участия */
+        .meetup-counter-block {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .meetup-counter-text {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        .meetup-counter-num {
+            font-weight: 900;
+            color: var(--accent);
+            font-size: 1.3rem;
         }
 
         /* ==========================================================================
@@ -257,16 +286,6 @@
         .day-btn, .choice-btn { padding: 14px 0; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
         .day-btn:hover, .choice-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); transform: translateY(-2px); }
         .day-btn.active, .choice-btn.active { background: var(--text-main); color: #000000; border-color: var(--text-main); font-weight: 700; transform: scale(1.05); }
-
-        .time-picker-container { display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 30px; }
-        .time-block { display: flex; flex-direction: column; align-items: center; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; min-width: 120px; }
-        .time-block-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; font-weight: 700; letter-spacing: 1px; }
-        .time-display { display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .time-num-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .time-arrow { background: none; border: none; color: #555; font-size: 1rem; cursor: pointer; padding: 5px; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-        .time-arrow:hover { color: var(--text-main); transform: scale(1.2); }
-        .time-val { font-size: 1.75rem; font-weight: 700; width: 40px; text-align: center; line-height: 1; }
-        .time-separator { font-size: 1.5rem; font-weight: 700; color: var(--text-muted); margin-top: -2px; }
 
         /* ==========================================================================
            5. КНОПКИ УПРАВЛЕНИЯ И АНИМАЦИИ
@@ -336,10 +355,10 @@
                 padding: 25px 15px; 
                 border-radius: 16px;
             }
-            /* Специфично для сходки на телефоне убираем отступы, чтобы было больше места */
             #meetup-container.container {
                 width: 100%;
                 padding: 10px;
+                height: 90vh; /* Чуть больше высоты на мобилке */
             }
             .header {
                 font-size: 2.8rem;
@@ -404,24 +423,36 @@
     </div>
 
     <!-- Блок "Сходка" -->
-    <div class="container hidden scrollable-container" id="meetup-container">
+    <div class="container hidden" id="meetup-container">
+        <!-- Фиксированный заголовок -->
         <h2 class="meetup-title">Сходка NAVERNO</h2>
-        <div class="meetup-info">
-            <div class="meetup-date">25 Июля 2026</div> 
-            <div class="meetup-time">Сбор в 18:00 по МСК</div> 
-        </div>
         
-        <div class="meetup-desc">
-            Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно. Кликай на фото ниже, чтобы рассмотреть всё детальнее.
-        </div>
-        
-        <div class="meetup-img-label">1. Место на карте</div>
-        <img src="karta.jpg" alt="Карта мероприятия" class="meetup-img">
-        
-        <div class="meetup-img-label">2. Место в игре</div>
-        <img src="mesto.jpg" alt="Фотография места" class="meetup-img">
+        <!-- Скроллируемая область контента -->
+        <div class="meetup-scroll-area">
+            <div class="meetup-info">
+                <div class="meetup-date">25 Июля 2026</div> 
+                <div class="meetup-time">Сбор в 18:00 по МСК</div> 
+            </div>
+            
+            <div class="meetup-desc">
+                Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно. Кликай на фото ниже, чтобы рассмотреть всё детальнее.
+            </div>
 
-        <button class="btn btn-back" id="bottomBackToHubBtn" style="width: 100%; margin-top: 25px;">Вернуться в меню</button>
+            <!-- Блок участия -->
+            <div class="meetup-counter-block">
+                <div class="meetup-counter-text">Уже точно придут: <span class="meetup-counter-num" id="participantCount">15</span> чел.</div>
+                <button class="btn" id="participateBtn" style="width: 100%;">Я буду! (Участвую)</button>
+            </div>
+            
+            <div class="meetup-img-label">1. Место на карте</div>
+            <img src="karta.jpg" alt="Карта мероприятия" class="meetup-img">
+            
+            <div class="meetup-img-label">2. Место в игре</div>
+            <img src="mesto.jpg" alt="Фотография места" class="meetup-img">
+        </div>
+
+        <!-- Фиксированная кнопка возврата -->
+        <button class="btn btn-back" id="bottomBackToHubBtn" style="flex-shrink: 0; width: 100%;">Вернуться в меню</button>
     </div>
 
     <!-- Модальное окно для полноэкранного просмотра фото -->
@@ -437,6 +468,46 @@
 
     <script>
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
+
+        // ==========================================================
+        // ГЛОБАЛЬНЫЕ НАСТРОЙКИ (ТУМБЛЕР СХОДКИ)
+        // ==========================================================
+        // Поменяй на false, если сходки нет, и кнопка пропадет
+        const IS_MEETUP_ACTIVE = true; 
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!IS_MEETUP_ACTIVE) {
+                document.getElementById('navMeetupBtn').style.display = 'none';
+            }
+        });
+
+        // ==========================================================
+        // ЛОГИКА УЧАСТИЯ В СХОДКЕ ("Я буду" / "Передумал")
+        // ==========================================================
+        let isParticipating = false;
+        let currentParticipants = 15; // Базовое число для вида
+        const participateBtn = document.getElementById('participateBtn');
+        const countDisplay = document.getElementById('participantCount');
+
+        participateBtn.addEventListener('click', () => {
+            isParticipating = !isParticipating;
+            
+            if (isParticipating) {
+                currentParticipants++;
+                participateBtn.innerText = 'Передумал';
+                participateBtn.style.background = 'rgba(255, 60, 60, 0.15)';
+                participateBtn.style.color = '#ff6b6b';
+                participateBtn.style.border = '1px solid rgba(255, 60, 60, 0.3)';
+            } else {
+                currentParticipants--;
+                participateBtn.innerText = 'Я буду! (Участвую)';
+                participateBtn.style.background = 'var(--accent)';
+                participateBtn.style.color = '#000000';
+                participateBtn.style.border = 'none';
+            }
+            
+            countDisplay.innerText = currentParticipants;
+        });
 
         // ==========================================================
         // ПРОСМОТР ФОТО
@@ -459,11 +530,9 @@
 
         closeModalBtn.addEventListener('click', closeImageModal);
         
-        // Закрытие по клику на фон
         imageModal.addEventListener('click', function(e) {
             if (e.target === imageModal || e.target.classList.contains('modal-wrapper')) closeImageModal();
         });
-
 
         // ==========================================================
         // ТАЙМЕР
@@ -516,7 +585,6 @@
             hideEl.classList.remove('fade-in');
             hideEl.classList.add('fade-out');
 
-            // Управление показом блока соцсетей
             if (showEl === mainHub) {
                 socialsBlock.classList.remove('hidden', 'fade-out');
                 socialsBlock.classList.add('fade-in');
@@ -533,11 +601,9 @@
             }, 400);
         }
 
-        // Открытие разделов из Хаба
         document.getElementById('navJoinBtn').addEventListener('click', () => switchContainers(mainHub, joinContainer));
         document.getElementById('navMeetupBtn').addEventListener('click', () => switchContainers(mainHub, meetupContainer));
         
-        // Возврат в меню через новые кнопки
         document.getElementById('bottomBackToHubBtn').addEventListener('click', () => switchContainers(meetupContainer, mainHub));
         document.getElementById('backToHubFromJoinBtn').addEventListener('click', () => switchContainers(joinContainer, mainHub));
 
@@ -688,7 +754,7 @@
                                         <div class="time-num-group">
                                             <button class="time-arrow" data-action="up" data-target="fromHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
                                             <span class="time-val" id="fromHour">${fH}</span>
-                                            <button class="time-arrow" data-action="down" data-target="fromHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+                                            <button class="time-arrow" data-action="down" data-target="fromHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg></button>
                                         </div>
                                         <span class="time-separator">:</span>
                                         <div class="time-num-group">
@@ -704,7 +770,7 @@
                                         <div class="time-num-group">
                                             <button class="time-arrow" data-action="up" data-target="toHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
                                             <span class="time-val" id="toHour">${tH}</span>
-                                            <button class="time-arrow" data-action="down" data-target="toHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+                                            <button class="time-arrow" data-action="down" data-target="toHour"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg></button>
                                         </div>
                                         <span class="time-separator">:</span>
                                         <div class="time-num-group">
