@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAVERNO Hub & Анкета</title>
     
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
@@ -171,17 +171,29 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        #meetup-container {
+        /* Убираем плашку и рамки для контейнера сходки */
+        #meetup-container.container {
             max-width: 650px;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 15px; 
+            animation: none; /* Убираем эффект float для чистого текста */
         }
 
         .scrollable-container {
             max-height: 70vh;
             overflow-y: auto;
+            overflow-x: hidden;
             padding-right: 10px;
         }
+        
+        /* Прозрачный скроллбар */
         .scrollable-container::-webkit-scrollbar { width: 6px; }
-        .scrollable-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+        .scrollable-container::-webkit-scrollbar-thumb { background: transparent; }
+        .scrollable-container::-webkit-scrollbar-track { background: transparent; }
 
         .container.fade-in, .container.fade-out, .global-socials.fade-in, .global-socials.fade-out { animation: none; }
         .hidden { display: none !important; }
@@ -197,23 +209,33 @@
         .timer-ready { color: #4ade80 !important; text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
 
         .meetup-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; margin-top: 10px; }
-        .meetup-info { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); }
+        
+        /* Убираем рамки и фон у информации о сходке */
+        .meetup-info { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; padding: 0; background: transparent; border: none; }
         .meetup-date { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
         .meetup-time { font-size: 1rem; color: var(--text-muted); }
         .meetup-desc { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); text-align: left; margin-bottom: 25px; }
         
+        .meetup-img-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: left;
+            margin: 20px 0 10px 0;
+            width: 100%;
+        }
+
         .meetup-img {
             width: 100%;
             border-radius: 12px;
             margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: none; /* Убрана рамка */
+            box-shadow: none; /* Убрана тень */
             cursor: pointer;
             transition: transform 0.3s ease;
         }
         .meetup-img:hover {
             transform: scale(1.02);
-            border-color: rgba(255, 255, 255, 0.3);
         }
 
         /* ==========================================================================
@@ -284,37 +306,43 @@
             -webkit-backdrop-filter: blur(10px);
         }
         .image-modal.show { opacity: 1; pointer-events: auto; }
-        .modal-content {
-            max-width: 90%; max-height: 90%;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        
+        .modal-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 95%;
+            height: 100%;
             transform: scale(0.8);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .image-modal.show .modal-wrapper { transform: scale(1); }
+        
+        .modal-content {
+            max-width: 100%; 
+            max-height: 75vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             object-fit: contain;
         }
-        .image-modal.show .modal-content { transform: scale(1); }
-        .close-modal {
-            position: absolute; top: 20px; right: 30px;
-            color: white; font-size: 40px; font-weight: 300;
-            cursor: pointer; z-index: 1001; line-height: 1;
-            transition: var(--transition);
-        }
-        .close-modal:hover { color: var(--text-muted); transform: scale(1.2); }
 
         /* ==========================================================================
-           7. АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (УБИРАЕМ РАМКИ И СЖАТИЕ)
+           7. АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ
            ========================================================================== */
         @media (max-width: 600px) {
             .container {
                 width: 94%;
-                padding: 25px 15px; /* Уменьшаем отступы внутри контейнера, чтобы дать место контенту */
+                padding: 25px 15px; 
                 border-radius: 16px;
             }
-            .header {
-                font-size: 2.8rem; /* Уменьшаем шрифт заголовка */
+            /* Специфично для сходки на телефоне убираем отступы, чтобы было больше места */
+            #meetup-container.container {
+                width: 100%;
+                padding: 10px;
             }
-            .meetup-info {
-                padding: 12px;
+            .header {
+                font-size: 2.8rem;
             }
             .timer-box {
                 min-width: 55px;
@@ -387,16 +415,21 @@
             Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно. Кликай на фото ниже, чтобы рассмотреть всё детальнее.
         </div>
         
+        <div class="meetup-img-label">1. Место на карте</div>
         <img src="karta.jpg" alt="Карта мероприятия" class="meetup-img">
+        
+        <div class="meetup-img-label">2. Место в игре</div>
         <img src="mesto.jpg" alt="Фотография места" class="meetup-img">
 
-        <button class="btn btn-back" id="bottomBackToHubBtn" style="width: 100%; margin-top: 15px;">Вернуться в меню</button>
+        <button class="btn btn-back" id="bottomBackToHubBtn" style="width: 100%; margin-top: 25px;">Вернуться в меню</button>
     </div>
 
     <!-- Модальное окно для полноэкранного просмотра фото -->
     <div class="image-modal" id="imageModal">
-        <span class="close-modal" id="closeModalBtn">&times;</span>
-        <img class="modal-content" id="zoomedImg">
+        <div class="modal-wrapper">
+            <img class="modal-content" id="zoomedImg">
+            <button class="btn btn-back" id="closeModalBtn" style="width: 100%; max-width: 300px; margin-top: 25px;">Выйти</button>
+        </div>
     </div>
 
     <!-- Контейнер для самой Анкеты -->
@@ -425,8 +458,10 @@
         }
 
         closeModalBtn.addEventListener('click', closeImageModal);
+        
+        // Закрытие по клику на фон
         imageModal.addEventListener('click', function(e) {
-            if (e.target === imageModal) closeImageModal();
+            if (e.target === imageModal || e.target.classList.contains('modal-wrapper')) closeImageModal();
         });
 
 
@@ -746,7 +781,6 @@
 
         document.addEventListener('click', function(e) {
             if (e.target && e.target.id === 'exitSurveyBtn') {
-                // Если юзер решил прервать анкету и выйти
                 switchContainers(surveyContainer, mainHub);
                 return;
             }
