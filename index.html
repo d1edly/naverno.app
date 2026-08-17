@@ -20,13 +20,13 @@
 
         :root {
             --bg-color: #050505;
-            --surface-color: rgba(20, 20, 25, 0.6);
+            --surface-color: rgba(20, 20, 25, 0.65);
             --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.2);
+            --border-hover: rgba(255, 255, 255, 0.25);
             --text-main: #ffffff;
-            --text-muted: #888888;
+            --text-muted: #a0a0a0;
             --accent: #ffffff;
-            --accent-hover: #e0e0e0;
+            --accent-hover: #d4d4d4;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -52,16 +52,36 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .ambient-light {
-            position: absolute;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(40,40,45,0.4) 0%, rgba(5,5,5,0) 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* Видеоплеер на заднем плане */
+        .bg-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
-            pointer-events: none;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+
+        .bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Темный минималистичный оверлей поверх видео */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(5,5,5,0.7) 0%, rgba(5,5,5,0.4) 50%, rgba(5,5,5,0.85) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1;
         }
 
         @keyframes float {
@@ -142,6 +162,7 @@
             transition: var(--transition);
             font-weight: 500;
             font-size: 0.9rem;
+            backdrop-filter: blur(12px);
         }
         .social-btn:hover {
             background: rgba(255, 255, 255, 0.08);
@@ -171,21 +192,20 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        /* Настройки для контейнера сходки (фиксированная высота, flex) */
+        /* Настройки для контейнера сходки */
         #meetup-container.container {
             max-width: 650px;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            padding: 10px; 
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 25px 20px; 
             animation: none;
-            height: 85vh; /* Ограничиваем высоту */
-            justify-content: space-between; /* Распределяем пространство */
+            height: 85vh;
+            justify-content: space-between;
         }
 
-        /* Область, которая будет скроллиться внутри сходки */
         .meetup-scroll-area {
             flex-grow: 1;
             overflow-y: auto;
@@ -219,13 +239,27 @@
             font-weight: 800; 
             margin-bottom: 15px; 
             margin-top: 5px; 
-            flex-shrink: 0; /* Не даём сжиматься заголовку */
+            flex-shrink: 0;
+            text-align: center;
         }
         
         .meetup-info { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; padding: 0; background: transparent; border: none; width: 100%; text-align: center;}
         .meetup-date { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
         .meetup-time { font-size: 1rem; color: var(--text-muted); }
-        .meetup-desc { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); text-align: left; margin-bottom: 20px; width: 100%;}
+        
+        .meetup-desc { 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            color: var(--text-main); 
+            text-align: left; 
+            margin-bottom: 25px; 
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-sizing: border-box;
+        }
         
         .meetup-img-label {
             font-size: 1.1rem;
@@ -242,8 +276,9 @@
             margin-bottom: 15px;
             cursor: pointer;
             transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
         }
-        .meetup-img:hover { transform: scale(1.02); }
+        .meetup-img:hover { transform: scale(1.02); border-color: var(--border-hover); }
 
         /* Блок счетчика и кнопки участия */
         .meetup-counter-block {
@@ -252,7 +287,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 10px;
+            margin-top: 15px;
             box-sizing: border-box;
             text-align: center;
         }
@@ -271,9 +306,9 @@
            4. ЭЛЕМЕНТЫ АНКЕТЫ
            ========================================================================== */
         .text-content { font-size: 1.2rem; font-weight: 500; line-height: 1.5; margin-bottom: 30px; color: var(--text-main); min-height: 4.5rem; text-align: center; }
-        input[type="text"], textarea { width: 100%; box-sizing: border-box; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 1rem; padding: 16px; border-radius: 12px; margin-bottom: 24px; outline: none; transition: var(--transition); resize: none; user-select: text; }
-        input[type="text"]::placeholder, textarea::placeholder { color: #555555; }
-        input[type="text"]:focus, textarea:focus { border-color: var(--border-hover); background: rgba(255, 255, 255, 0.02); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05); transform: translateY(-2px); }
+        input[type="text"], textarea { width: 100%; box-sizing: border-box; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 1rem; padding: 16px; border-radius: 12px; margin-bottom: 24px; outline: none; transition: var(--transition); resize: none; user-select: text; }
+        input[type="text"]::placeholder, textarea::placeholder { color: #888888; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--border-hover); background: rgba(255, 255, 255, 0.05); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05); transform: translateY(-2px); }
         .words-column { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; width: 100%; }
         .words-column input { margin-bottom: 0; }
         .slider-value { font-size: 3rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; color: var(--text-main); transition: transform 0.2s ease; }
@@ -283,8 +318,8 @@
         .days-grid, .choice-grid { display: grid; gap: 12px; margin-bottom: 30px; }
         .days-grid { grid-template-columns: repeat(4, 1fr); }
         .choice-grid { grid-template-columns: 1fr 1fr; }
-        .day-btn, .choice-btn { padding: 14px 0; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
-        .day-btn:hover, .choice-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); transform: translateY(-2px); }
+        .day-btn, .choice-btn { padding: 14px 0; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
+        .day-btn:hover, .choice-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-main); transform: translateY(-2px); }
         .day-btn.active, .choice-btn.active { background: var(--text-main); color: #000000; border-color: var(--text-main); font-weight: 700; transform: scale(1.05); }
 
         /* ==========================================================================
@@ -294,11 +329,8 @@
         .btn { flex: 2; background: var(--accent); color: #000000; border: none; padding: 16px 20px; font-family: 'Inter', sans-serif; font-size: 1rem; border-radius: 12px; cursor: pointer; transition: var(--transition); font-weight: 600; }
         .btn:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15); }
         .btn:disabled { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.3); cursor: not-allowed; }
-        .btn-back { flex: 1; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
-        .btn-back:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--border-hover); }
-
-        #navMeetupBtn { transition: all 0.3s ease; }
-        #navMeetupBtn:hover { background: rgba(0, 0, 0, 0.8); border-color: rgba(255, 255, 255, 0.1); color: #ffffff; }
+        .btn-back { flex: 1; background: rgba(0,0,0,0.4); color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-hover); }
 
         .locked-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; }
         .lock-icon-svg { color: var(--text-main); margin-bottom: 24px; opacity: 0; animation: fadeUpIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -357,8 +389,8 @@
             }
             #meetup-container.container {
                 width: 100%;
-                padding: 10px;
-                height: 90vh; /* Чуть больше высоты на мобилке */
+                padding: 15px 10px;
+                height: 90vh;
             }
             .header {
                 font-size: 2.8rem;
@@ -375,7 +407,11 @@
 </head>
 <body>
 
-    <div class="ambient-light"></div>
+    <!-- Фоновый видеоплеер -->
+    <div class="bg-video-container">
+        <video id="bgVideo" class="bg-video" autoplay muted playsinline></video>
+        <div class="bg-overlay"></div>
+    </div>
 
     <div class="header">NAVERNO</div>
     
@@ -430,29 +466,31 @@
         <!-- Скроллируемая область контента -->
         <div class="meetup-scroll-area">
             <div class="meetup-info">
-                <div class="meetup-date">25 Июля 2026</div> 
-                <div class="meetup-time">Сбор в 18:00 по МСК</div> 
+                <div class="meetup-date">16 Августа 2026</div> 
+                <div class="meetup-time">Сбор в 20:00 (МСК)</div> 
             </div>
             
             <div class="meetup-desc">
-                Мы собираемся вместе, чтобы обсудить будущее проекта, познакомиться лично и просто круто провести время! Будут конкурсы, живое общение и возможность задать вопросы нашей команде. Присоединяйся, будет атмосферно. Кликай на фото ниже, чтобы рассмотреть всё детальнее.
+                Привет! Круто, что ты заглянул, мы ждали именно тебя. Это официальная сходка подписчиков и команды NAVERNO. Мы собираемся на 3-ем сервере MTA Province, парковка у магазина Лента в Приволжске. 
+                <br><br>
+                Мы будем не просто общаться — мы снимем масштабное совместное видео для канала! Сценарий для ролика будет опубликован прямо в этом разделе ровно за час до начала сходки, так что заглядывай сюда перед стартом. Изучай фото ниже, чтобы визуально понимать, куда ехать, и обязательно жми кнопку участия!
             </div>
+            
+            <div class="meetup-img-label">1. Как выглядит место (Сходка)</div>
+            <img src="сходка.png" alt="Фотография места" class="meetup-img">
 
-            <!-- Блок участия -->
+            <div class="meetup-img-label">2. Точка на карте</div>
+            <img src="карта.png" alt="Карта мероприятия" class="meetup-img">
+
+            <!-- Блок участия в самом низу под фотками -->
             <div class="meetup-counter-block">
                 <div class="meetup-counter-text">Уже точно придут: <span class="meetup-counter-num" id="participantCount">15</span> чел.</div>
                 <button class="btn" id="participateBtn" style="width: 100%;">Я буду! (Участвую)</button>
             </div>
-            
-            <div class="meetup-img-label">1. Место на карте</div>
-            <img src="karta.jpg" alt="Карта мероприятия" class="meetup-img">
-            
-            <div class="meetup-img-label">2. Место в игре</div>
-            <img src="mesto.jpg" alt="Фотография места" class="meetup-img">
         </div>
 
         <!-- Фиксированная кнопка возврата -->
-        <button class="btn btn-back" id="bottomBackToHubBtn" style="flex-shrink: 0; width: 100%;">Вернуться в меню</button>
+        <button class="btn btn-back" id="bottomBackToHubBtn" style="flex-shrink: 0; width: 100%; margin-top: 10px;">Вернуться в меню</button>
     </div>
 
     <!-- Модальное окно для полноэкранного просмотра фото -->
@@ -470,10 +508,38 @@
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
         // ==========================================================
+        // 0. ФОНОВЫЕ ВИДЕО (Плавный переход)
+        // ==========================================================
+        const bgVideos = [
+            './bg1.mp4',
+            './bg2.mp4',
+            './bg3.mp4',
+            './bg4.mp4'
+        ];
+        
+        let currentVideoIdx = 0;
+        const videoElement = document.getElementById('bgVideo');
+
+        function playNextVideo() {
+            if (bgVideos.length === 0) return;
+            videoElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                videoElement.src = bgVideos[currentVideoIdx];
+                videoElement.play().catch(() => console.log("Браузер ждет клика пользователя"));
+                videoElement.style.opacity = '1';
+                currentVideoIdx = (currentVideoIdx + 1) % bgVideos.length;
+            }, 1000); 
+        }
+
+        videoElement.addEventListener('ended', playNextVideo);
+        if (bgVideos.length > 0) playNextVideo();
+
+        // ==========================================================
         // ГЛОБАЛЬНЫЕ НАСТРОЙКИ (ТУМБЛЕР СХОДКИ)
         // ==========================================================
-        // Поменяй на false, если сходки нет, и кнопка пропадет
-        const IS_MEETUP_ACTIVE = false; 
+        // true — кнопка активна, сходка включена
+        const IS_MEETUP_ACTIVE = true; 
 
         document.addEventListener("DOMContentLoaded", () => {
             if (!IS_MEETUP_ACTIVE) {
@@ -485,7 +551,7 @@
         // ЛОГИКА УЧАСТИЯ В СХОДКЕ ("Я буду" / "Передумал")
         // ==========================================================
         let isParticipating = false;
-        let currentParticipants = 15; // Базовое число для вида
+        let currentParticipants = 15; // Стартовое число для визуала
         const participateBtn = document.getElementById('participateBtn');
         const countDisplay = document.getElementById('participantCount');
 
@@ -507,6 +573,9 @@
             }
             
             countDisplay.innerText = currentParticipants;
+            
+            // ВАЖНО: В будущем здесь будет отправка данных в БД (Firebase / Google Sheets API), 
+            // чтобы клик учитывался в общей базе и обновлялся у всех.
         });
 
         // ==========================================================
