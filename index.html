@@ -464,6 +464,15 @@
     <div class="container hidden" id="survey-container"></div>
 
     <script>
+        // ==========================================================
+        // НАСТРОЙКИ РАЗДЕЛОВ (КОНФИГ)
+        // ==========================================================
+        const APP_CONFIG = {
+            enableSurvey: false, // true - включить анкету ("Стать частью нас"), false - отключить
+            enableMeetup: true, // true - включить "Сходку", false - отключить
+            enableSocials: true // true - отображать соцсети, false - отключить
+        };
+
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
 
         const bgVideos = ['./bg1.mp4', './bg2.mp4', './bg3.mp4', './bg4.mp4'];
@@ -484,9 +493,11 @@
         videoElement.addEventListener('ended', playNextVideo);
         if (bgVideos.length > 0) playNextVideo();
 
-        const IS_MEETUP_ACTIVE = true; 
         document.addEventListener("DOMContentLoaded", () => {
-            if (!IS_MEETUP_ACTIVE) document.getElementById('navMeetupBtn').style.display = 'none';
+            // Применение настроек конфига при загрузке
+            if (!APP_CONFIG.enableSurvey) document.getElementById('navJoinBtn').style.display = 'none';
+            if (!APP_CONFIG.enableMeetup) document.getElementById('navMeetupBtn').style.display = 'none';
+            if (!APP_CONFIG.enableSocials) document.getElementById('socialsBlock').style.display = 'none';
         });
 
         // ==========================================================
@@ -636,12 +647,17 @@
             hideEl.classList.add('fade-out');
 
             if (showEl === mainHub) {
-                socialsBlock.classList.remove('hidden', 'fade-out');
-                socialsBlock.classList.add('fade-in');
+                // Возвращаем блок соцсетей только если он включен в настройках
+                if (APP_CONFIG.enableSocials) {
+                    socialsBlock.classList.remove('hidden', 'fade-out');
+                    socialsBlock.classList.add('fade-in');
+                }
             } else if (hideEl === mainHub) {
-                socialsBlock.classList.remove('fade-in');
-                socialsBlock.classList.add('fade-out');
-                setTimeout(() => socialsBlock.classList.add('hidden'), 400);
+                if (APP_CONFIG.enableSocials) {
+                    socialsBlock.classList.remove('fade-in');
+                    socialsBlock.classList.add('fade-out');
+                    setTimeout(() => socialsBlock.classList.add('hidden'), 400);
+                }
             }
             
             setTimeout(() => {
