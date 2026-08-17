@@ -591,7 +591,7 @@
 
         // ФУНКЦИЯ ОТПРАВКИ ДАННЫХ (Подставь свой URL Google Script сюда)
         function sendMeetupStatus(status) {
-            const MEETUP_SCRIPT_URL = 'ТВОЯ_ССЫЛКА_НА_GOOGLE_SCRIPT'; // <--- ЗАМЕНИТЬ ЭТУ СТРОКУ
+            const MEETUP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybkVb0pRN6BgHguQfsffk3jVGNSUhlQ7_eWZRo8KCC5K72rYLN-mqnnX-xHZXnZOnYcA/exec'; // <--- ЗАМЕНИТЬ ЭТУ СТРОКУ
             
             vkBridge.send('VKWebAppGetUserInfo')
                 .then(user => {
