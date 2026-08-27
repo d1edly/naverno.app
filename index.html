@@ -262,6 +262,19 @@
             box-sizing: border-box;
         }
         
+        .meetup-style-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
         .meetup-img-label { font-size: 1.1rem; font-weight: 700; color: var(--text-main); text-align: left; margin: 15px 0 10px 0; width: 100%; }
         .meetup-img { width: 100%; border-radius: 12px; margin-bottom: 15px; cursor: pointer; transition: transform 0.3s ease; border: 1px solid var(--border-color); }
         .meetup-img:hover { transform: scale(1.02); border-color: var(--border-hover); }
@@ -419,18 +432,40 @@
         <button class="btn btn-back" style="width: 100%; margin-top: 15px;" id="backToHubFromJoinBtn">Выйти в главное меню</button>
     </div>
 
+    <!-- КОНТЕЙНЕР СХОДКИ СО ВСЕМИ ПРАВКАМИ -->
     <div class="container hidden" id="meetup-container">
-        <h2 class="meetup-title">Сходка NAVERNO</h2>
-        <div class="meetup-scroll-area">
+        
+        <!-- ЭКРАН 1: Приветствие и пользовательское соглашение -->
+        <div id="meetup-step-1" class="meetup-scroll-area" style="justify-content: center; padding-top: 20px;">
+            <h2 class="meetup-title">Сходка NAVERNO</h2>
+            <div class="meetup-desc" style="text-align: center; margin-top: 15px;">
+                Привет! Мы решили в честь 500 подписчиков провести масштабную сходку на 3-ем сервере MTA Province, и вместе с этим снять крутое видео со всеми вами! 
+                <br><br>
+                Если тебе это интересно, нажимай «Далее». Обрати внимание: нажимая кнопку, ты подтверждаешь своё участие и автоматически соглашаешься со всеми правилами сходки, включая порядок поведения и правила использования транспорта на месте (парковка у Ленты в Приволжске).
+            </div>
+            <button class="btn" id="agreeBtn" style="width: 100%; margin-top: auto;">Далее</button>
+        </div>
+
+        <!-- ЭКРАН 2: Информация, правила и фото (появляется только после согласия) -->
+        <div id="meetup-step-2" class="meetup-scroll-area hidden">
+            <h2 class="meetup-title">Сходка NAVERNO</h2>
             <div class="meetup-info">
                 <div class="meetup-date">16 Августа 2026</div> 
                 <div class="meetup-time">Сбор в 20:00 (МСК)</div> 
             </div>
+
+            <!-- БЛОК ПРО СТИЛЬ ВИДЕО И ТРАНСПОРТ -->
+            <div class="meetup-style-box">
+                <b>🎬 Стиль видео и транспорт:</b><br>
+                На этой сходке мы снимаем тематический ролик, поэтому участвовать на автомобиле можно <b>только на BMW</b>. Если у тебя нет этой марки машины — ничего страшного! Оставь своё авто в стороне, ты всё равно можешь полноценно участвовать как пешеход.
+            </div>
             
             <div class="meetup-desc">
-                Привет! Круто, что ты заглянул, мы ждали именно тебя. Это официальная сходка подписчиков и команды NAVERNO. Мы собираемся на 3-ем сервере MTA Province, парковка у магазина Лента в Приволжске. 
-                <br><br>
-                Мы будем не просто общаться — мы снимем масштабное совместное видео для канала! Сценарий для ролика будет опубликован прямо в этом разделе ровно за час до начала сходки, так что заглядывай сюда перед стартом. Изучай фото ниже, чтобы визуально понимать, куда ехать, и обязательно жми кнопку участия!
+                <b>Правила мероприятия:</b><br>
+                • Адекватное поведение, без агрессии и ДМ.<br>
+                • Внимательно слушать организаторов во время съемок.<br>
+                • Транспорт парковать строго в указанной зоне, не создавать помех.<br><br>
+                Сценарий для ролика будет опубликован прямо в этом разделе ровно за час до начала сходки, так что заглядывай сюда перед стартом. Изучай фото ниже, чтобы визуально понимать, куда ехать.
             </div>
             
             <div class="meetup-img-label">1. Как выглядит место (Сходка)</div>
@@ -440,17 +475,21 @@
             <img src="карта.png" alt="Карта мероприятия" class="meetup-img">
 
             <div class="meetup-counter-block">
-                <!-- Значение исправлено на 0 -->
                 <div class="meetup-counter-text">Уже точно придут: <span class="meetup-counter-num" id="participantCount">0</span> чел.</div>
-                
-                <div class="meetup-warning">
-                    ⚠️ Убедительная просьба: нажимай на кнопку, только если ты <b>точно</b> будешь на сходке. Нам важна чистая статистика!
-                </div>
-                
-                <button class="btn" id="participateBtn" style="width: 100%;">Я буду! (Участвую)</button>
+                <button class="btn" id="cancelBtn" style="width: 100%; background: rgba(255, 60, 60, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 60, 60, 0.3);">Передумал</button>
             </div>
         </div>
 
+        <!-- ЭКРАН 3: Плашка при отмене -->
+        <div id="meetup-step-3" class="meetup-scroll-area hidden" style="justify-content: center; align-items: center; text-align: center;">
+            <h2 class="meetup-title" style="margin-bottom: 20px;">Очень жаль 😔</h2>
+            <div class="meetup-warning">
+                Жалко, что тебя не будет на мероприятии. Твоё участие отменено.
+            </div>
+            <button class="btn" id="rejoinBtn" style="width: 100%; margin-top: 25px;">Я передумал, хочу прийти!</button>
+        </div>
+
+        <!-- Общая кнопка выхода -->
         <button class="btn btn-back" id="bottomBackToHubBtn" style="flex-shrink: 0; width: 100%; margin-top: 10px;">Вернуться в меню</button>
     </div>
 
@@ -468,9 +507,9 @@
         // НАСТРОЙКИ РАЗДЕЛОВ (КОНФИГ)
         // ==========================================================
         const APP_CONFIG = {
-            enableSurvey: false, // true - включить анкету ("Стать частью нас"), false - отключить
-            enableMeetup: true, // true - включить "Сходку", false - отключить
-            enableSocials: true // true - отображать соцсети, false - отключить
+            enableSurvey: false, 
+            enableMeetup: true, 
+            enableSocials: true 
         };
 
         try { vkBridge.send('VKWebAppInit'); } catch(e) { console.log('VK Bridge init error', e); }
@@ -494,7 +533,6 @@
         if (bgVideos.length > 0) playNextVideo();
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Применение настроек конфига при загрузке
             if (!APP_CONFIG.enableSurvey) document.getElementById('navJoinBtn').style.display = 'none';
             if (!APP_CONFIG.enableMeetup) document.getElementById('navMeetupBtn').style.display = 'none';
             if (!APP_CONFIG.enableSocials) document.getElementById('socialsBlock').style.display = 'none';
@@ -504,12 +542,17 @@
         // ЛОГИКА УЧАСТИЯ В СХОДКЕ С ОТПРАВКОЙ НА БЭКЕНД
         // ==========================================================
         let isParticipating = false;
-        let currentParticipants = 0; // Значение по умолчанию исправлено на 0
-        const participateBtn = document.getElementById('participateBtn');
+        let currentParticipants = 0; 
+
+        const step1 = document.getElementById('meetup-step-1');
+        const step2 = document.getElementById('meetup-step-2');
+        const step3 = document.getElementById('meetup-step-3');
+        const agreeBtn = document.getElementById('agreeBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const rejoinBtn = document.getElementById('rejoinBtn');
         const countDisplay = document.getElementById('participantCount');
 
         function sendMeetupStatus(status) {
-            // ВСТАВЬ СЮДА СВОЙ URL GOOGLE SCRIPT! (Для сходки)
             const MEETUP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLlIaPtm-k-UnSqwzcRGksD-X3qmKPjhJlbKvDDxrKoNdo4S7aEOFWXErnNNj2E-QStg/exec';
             
             const executeFetch = (payload) => {
@@ -519,56 +562,63 @@
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
-                })
-                .then(() => console.log("Запрос сходки ушел в таблицу"))
-                .catch(err => console.error("Ошибка:", err));
+                }).catch(err => console.error("Ошибка:", err));
             };
 
             let hasSent = false;
-            // Фоллбэк-таймер: если запускается с обычного браузера (не ВК)
             const fallbackTimer = setTimeout(() => {
-                if (!hasSent) {
-                    hasSent = true;
-                    executeFetch({ type: 'meetup_rsvp', userId: 0, userName: "Аноним (Веб)", isParticipating: status });
-                }
+                if (!hasSent) { hasSent = true; executeFetch({ type: 'meetup_rsvp', userId: 0, userName: "Аноним (Веб)", isParticipating: status }); }
             }, 800);
 
             vkBridge.send('VKWebAppGetUserInfo')
                 .then(user => {
                     if (!hasSent) {
-                        clearTimeout(fallbackTimer);
-                        hasSent = true;
+                        clearTimeout(fallbackTimer); hasSent = true;
                         executeFetch({ type: 'meetup_rsvp', userId: user.id, userName: user.first_name + " " + user.last_name, isParticipating: status });
                     }
-                })
-                .catch(() => {
+                }).catch(() => {
                     if (!hasSent) {
-                        clearTimeout(fallbackTimer);
-                        hasSent = true;
+                        clearTimeout(fallbackTimer); hasSent = true;
                         executeFetch({ type: 'meetup_rsvp', userId: 0, userName: "Аноним", isParticipating: status });
                     }
                 });
         }
 
-        participateBtn.addEventListener('click', () => {
-            isParticipating = !isParticipating;
-            
-            if (isParticipating) {
+        function showMeetupStep(stepId) {
+            step1.classList.add('hidden');
+            step2.classList.add('hidden');
+            step3.classList.add('hidden');
+            document.getElementById(stepId).classList.remove('hidden');
+        }
+
+        agreeBtn.addEventListener('click', () => {
+            if (!isParticipating) {
+                isParticipating = true;
                 currentParticipants++;
-                participateBtn.innerText = 'Передумал';
-                participateBtn.style.background = 'rgba(255, 60, 60, 0.15)';
-                participateBtn.style.color = '#ff6b6b';
-                participateBtn.style.border = '1px solid rgba(255, 60, 60, 0.3)';
-            } else {
-                currentParticipants = Math.max(0, currentParticipants - 1);
-                participateBtn.innerText = 'Я буду! (Участвую)';
-                participateBtn.style.background = 'var(--accent)';
-                participateBtn.style.color = '#000000';
-                participateBtn.style.border = 'none';
+                countDisplay.innerText = currentParticipants;
+                sendMeetupStatus(true);
             }
-            
-            countDisplay.innerText = currentParticipants;
-            sendMeetupStatus(isParticipating);
+            showMeetupStep('meetup-step-2');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            if (isParticipating) {
+                isParticipating = false;
+                currentParticipants = Math.max(0, currentParticipants - 1);
+                countDisplay.innerText = currentParticipants;
+                sendMeetupStatus(false);
+            }
+            showMeetupStep('meetup-step-3');
+        });
+
+        rejoinBtn.addEventListener('click', () => {
+            if (!isParticipating) {
+                isParticipating = true;
+                currentParticipants++;
+                countDisplay.innerText = currentParticipants;
+                sendMeetupStatus(true);
+            }
+            showMeetupStep('meetup-step-2');
         });
 
         // ==========================================================
@@ -647,7 +697,6 @@
             hideEl.classList.add('fade-out');
 
             if (showEl === mainHub) {
-                // Возвращаем блок соцсетей только если он включен в настройках
                 if (APP_CONFIG.enableSocials) {
                     socialsBlock.classList.remove('hidden', 'fade-out');
                     socialsBlock.classList.add('fade-in');
@@ -668,7 +717,16 @@
         }
 
         document.getElementById('navJoinBtn').addEventListener('click', () => switchContainers(mainHub, joinContainer));
-        document.getElementById('navMeetupBtn').addEventListener('click', () => switchContainers(mainHub, meetupContainer));
+        
+        document.getElementById('navMeetupBtn').addEventListener('click', () => {
+            switchContainers(mainHub, meetupContainer);
+            if (isParticipating) {
+                showMeetupStep('meetup-step-2');
+            } else {
+                showMeetupStep('meetup-step-1');
+            }
+        });
+
         document.getElementById('bottomBackToHubBtn').addEventListener('click', () => switchContainers(meetupContainer, mainHub));
         document.getElementById('backToHubFromJoinBtn').addEventListener('click', () => switchContainers(joinContainer, mainHub));
 
@@ -873,7 +931,6 @@
                     
                     localStorage.setItem('naverno_anketa_submitted', 'true');
                     
-                    // ВСТАВЬ СЮДА СВОЙ URL GOOGLE SCRIPT! (Для анкеты, можно тот же самый)
                     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1aIzpzCVAJLAQN2h3N2ijLYrnK7Os2-736w-r-kjlM6lxrtqKccQ8hVxVuP2l-FQ/exec';
 
                     function sendData(finalData) {
