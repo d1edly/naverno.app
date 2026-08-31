@@ -200,6 +200,7 @@
             padding: 25px 20px; 
             animation: none;
             height: 85vh;
+            max-height: 750px;
             justify-content: space-between;
         }
 
@@ -207,13 +208,15 @@
             flex-grow: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-right: 10px;
+            padding-right: 5px;
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             -ms-overflow-style: none;  
             scrollbar-width: none;  
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .meetup-scroll-area::-webkit-scrollbar { 
@@ -262,7 +265,7 @@
             box-sizing: border-box;
         }
         
-        /* ПЕРЕДЕЛАННАЯ ПЛАШКА «СТИЛЬ ВИДЕО» */
+        /* ПЛАШКА «СТИЛЬ ВИДЕО» */
         .meetup-style-box {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -326,9 +329,14 @@
             background: #000;
             margin-bottom: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .video-player-wrapper video {
             width: 100%;
+            max-height: 45vh;
+            object-fit: contain;
             display: block;
             outline: none;
             border-radius: 14px;
@@ -517,7 +525,7 @@
 
     <div class="container hidden" id="meetup-container">
         
-        <div id="meetup-step-1" class="meetup-scroll-area" style="justify-content: center; padding-top: 10px;">
+        <div id="meetup-step-1" class="meetup-scroll-area" style="padding-top: 10px;">
             <h2 class="meetup-title">Сходка NAVERNO</h2>
             
             <div class="video-player-wrapper">
@@ -545,7 +553,6 @@
                 Идут на сходку: <b id="participantCount">0</b> чел.
             </div>
 
-            <!-- ОБНОВЛЕННАЯ ПЛАШКА «СТИЛЬ ВИДЕО» -->
             <div class="meetup-style-box">
                 <div class="style-header">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
@@ -588,7 +595,7 @@
             </div>
         </div>
 
-        <div id="meetup-step-3" class="meetup-scroll-area hidden" style="justify-content: center; align-items: center; text-align: center;">
+        <div id="meetup-step-3" class="meetup-scroll-area hidden" style="align-items: center; text-align: center; padding-top: 40px;">
             <h2 class="meetup-title" style="margin-bottom: 20px;">Очень жаль 😔</h2>
             <div class="meetup-warning">
                 Жалко, что тебя не будет на мероприятии. Твоё участие отменено.
@@ -611,7 +618,7 @@
     <script>
         const MEETUP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLlIaPtm-k-UnSqwzcRGksD-X3qmKPjhJlbKvDDxrKoNdo4S7aEOFWXErnNNj2E-QStg/exec';
 
-        // Генерация условного уникального ключа браузера, если клиент заходит не из VK
+        // Генерация уникального ключа браузера
         let clientUniqueId = localStorage.getItem('naverno_browser_id');
         if (!clientUniqueId) {
             clientUniqueId = 'web_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
